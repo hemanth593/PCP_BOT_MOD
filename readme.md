@@ -1,233 +1,144 @@
-PCP Automation – README (Updated)
+# 📘 PCP Automation – README (Updated & Clean Preview)
 
-This README explains how to configure and run the PCP Leader and PCP Member automation scripts. It also includes the required game folder setup.
+This README explains how to configure and run the **PCP Leader** and **PCP Member** automation scripts, including required game folder setup.
 
-Scripts referenced:
+---
 
-PCP Leader Script 
+# 📁🔧 0. Game Folder Setup (VERY IMPORTANT)
 
-PCP Leader
-
-PCP Member Scripts (1–4)
-
-PCP Core Logic – PCP.lua 
-
-PCP
-
-📁 🔧 0. Game Folder Setup (VERY IMPORTANT)
-
-Your PCP automation requires certain game UI and model modifications.
+Your PCP automation requires UI, model, and image modifications.
 
 Inside your installation package you will find:
 
+```
 PCP/setup/
     ├── mods
     ├── local
     ├── model
     └── ui
+```
 
-✅ You MUST copy these folders into your game directory exactly as they are.
+### ✅ You MUST copy these folders into your game directory exactly as they are:
 
-Do not rename them.
-Do not merge/replace partially.
-Copy all four folders (mods, local, model, ui) directly into your game root folder.
+- Do **not** rename them  
+- Do **not** partially merge  
+- Copy all four folders directly into the **game root folder**
 
-Example:
+### Example
 
+```
 <Your Game Folder>/
-    ├── mods/       <-- copy here
-    ├── local/      <-- copy here
-    ├── model/      <-- copy here
-    └── ui/         <-- copy here
-
+    ├── mods/
+    ├── local/
+    ├── model/
+    └── ui/
+```
 
 These folders contain:
 
-modified UI icons for specter_fish, specter_shark, specter_servant, YeChun, etc.
+- Modified UI icons  
+- Custom UI elements  
+- Bitmaps for image recognition  
+- Movement & model metadata  
 
-custom UI elements for FOE/team detection
-
-custom bitmaps required for image recognition
-
-movement/model metadata used by the bot
-
-Without this folder setup, the bot cannot detect:
-
-✔ Team icons
-✔ Mob icons
-✔ Target HP bar
-✔ Calendar icon
-✔ Dungeon entry points
-
-Therefore PCP will not function without these files.
-
-# 🧩 **Overview**
-
-This automation handles **PCP Cave Runs** in *Shark Sea*, coordinating:
-
-* Auto-navigation
-* Auto-teaming
-* Party leader logic
-* Cave entry / exit
-* Target detection & attack cycles
-* Dismiss team + return to Guild
-* CSV signalling system between characters
-
-The Leader script organizes the team and controls flow.
-Each Member script listens for signals (CSV files) and follows Leader’s actions.
+Without this setup, PCP will **not function**.
 
 ---
 
-# 📁 **Folder Requirements**
+# 🧩 Overview
 
-Place scripts inside:
+This automation handles **PCP Cave Runs** in *Shark Sea*, including:
+
+- Auto-navigation  
+- Auto-teaming  
+- Leader logic  
+- Cave entry/exit  
+- Target detection & combat  
+- CSV signaling  
+- Team dismissal  
+- Return to Guild  
+
+---
+
+# 📁 Folder Requirements
 
 ```
 Bot/
 PCP/
 ```
 
-Ensure folders exist:
+Inside:
 
 ```
 PCP/
     ├── itemdelete/
     ├── team.bmp
-    ├── cave.csv + <CHAR>.csv (auto-generated)
+    ├── cave.csv (auto)
+    ├── <CHAR>.csv (auto)
     ├── specter_*.bmp
-    └── Other images used in detection
+    └── other detection images
 ```
 
 ---
 
-# 🧙‍♂️ **1. Leader Script Setup**
+# 🧙‍♂️ 1. Leader Script Setup
 
-**File:** *PCP Leader.txt* (Leader Script) 
-
-### 🔧 Leader Settings
-
-The Leader script must set:
+**File:** `PCP Leader.txt`
 
 ```lua
 Leader = "YES"
-LeaderName = "<name of the leader>"
+LeaderName = "<leader name>"
 teamcount = 5
-Team1 = "<name of member 1>"
-Team2 = "<name of member 2>"
-Team3 = "<name of member 3>"
-Team4 = "<name of member 4>"
-team = "<name of member 5>"
-CHAR_NAME = "<YOUR CHARACTER NAME FOR THE SCRIPT>"
+
+Team1 = "<member1>"
+Team2 = "<member2>"
+Team3 = "<member3>"
+Team4 = "<member4>"
+team  = "<member5>"
+
+CHAR_NAME = "<leader character>"
 ```
 
-### 📝 Leader Responsibilities (Automatically Handled)
+Leader handles:
 
-✔ Creates CSV signals for members
-✔ Deletes CSVs after each stage
-✔ Forms the team using FOE list
-✔ Detects when team members join
-✔ Enters cave and coordinates members
-✔ Handles attacks using **inside2()**
-✔ Dismisses team after boss kill
-✔ Clears all residual files
-
-### 🎯 Leader Flow (Internal)
-
-1. Verify client
-2. Move to Guild
-3. Remove dice popup
-4. Reset view
-5. Feed pet
-6. Team members (`PCP.leaderteam()`)
-7. Raise **cave.csv** signal
-8. Enter cave
-9. Run combat/attack logic
-10. Detect Boss death
-11. Delete member files
-12. Dismiss Team
-13. Return to Guild
-14. Loop again
+- CSV control  
+- Team formation  
+- Cave entry  
+- Combat via `inside2()`  
+- Detect boss death  
+- Team dismiss  
+- Guild return  
+- Loop  
 
 ---
 
-# 👥 **2. Member Script Setup**
+# 👥 2. Member Script Setup
 
-**Files:**
-
-* PCP member 1.txt (<name of member 1>) 
-* PCP member 2.txt (<name of member 1>) 
-* PCP member 3.txt (<name of member 1>) 
-* PCP member 4.txt (<name of member 1>) 
-
-Each member script must set:
+Each member script sets:
 
 ```lua
 Leader = "NO"
-LeaderName = "<YOUR LEADER NAME OF THE TEAM>"
-team = "<their-number>"
+LeaderName = "<leader>"
+team = "<their number>"
 CHAR_NAME = "<their name>"
 ```
 
-Examples:
+Members automatically:
 
-### Member 1 — <name of member 1>
-
-```
-CHAR_NAME = "<name of member 1>"
-team = "1"
-Leader = "NO"
-```
-
-Each value traced from 
-
-### Member 2 — <name of member 2>
-
-```
-CHAR_NAME = "<name of member 2>"
-team = "2"
-Leader = "NO"
-```
-
-From 
-
-### Member 3 — <name of member 3>
-
-```
-CHAR_NAME = "<name of member 3>"
-team = "3"
-Leader = "NO"
-```
-
-From 
-
-### Member 4 — <name of member 4>
-
-```
-CHAR_NAME = "<name of member 4>"
-team = "4"
-Leader = "NO"
-```
-
-From 
-
-### 🧠 Member Responsibilities (Automatic)
-
-✔ Waits for file `PCP/<CHAR_NAME>.csv`
-✔ Auto-accepts team invites
-✔ Follows Leader into cave
-✔ Runs attack logic using **inside1()**
-✔ Deletes cave.csv when boss dies
-✔ Exits cave
-✔ Returns to Guild on its own
-✔ Loop again
+- Wait for CSV  
+- Auto-join  
+- Follow leader  
+- Attack via `inside1()`  
+- Delete cave.csv  
+- Exit  
+- Return to Guild  
+- Loop  
 
 ---
 
-# 📌 **3. CSV Signalling System**
+# 📌 3. CSV Signal System
 
-This is the heart of Leader–Member sync.
-
-### Leader Writes:
+Leader creates:
 
 ```
 PCP\<TeamX>.csv
@@ -235,101 +146,77 @@ PCP\cave.csv
 PCP\<TeamX>cave.csv
 ```
 
-### Members Wait For:
+Members wait for:
 
 ```
-PCP\<CHAR_NAME>.csv
+PCP\<CHAR>.csv
 ```
 
-### Boss Death Handling:
-
-Each member deletes cave.csv with delay based on member number:
+Boss death delays:
 
 | Team | Delay |
-| ---- | ----- |
-| 1    | 200ms |
-| 2    | 400ms |
-| 3    | 600ms |
-| 4    | 800ms |
-| 5    | 100ms |
-
-This logic verified in `PCP.allattack()` and `PCP.allattackaoe()` from core file.
-
+|------|-------|
+| 1 | 200ms |
+| 2 | 400ms |
+| 3 | 600ms |
+| 4 | 800ms |
+| 5 | 100ms |
 
 ---
 
-# ⚔️ **4. Attack Logic**
+# ⚔️ 4. Attack Logic
 
-Two modes:
+**AOE Mode:** first 150s  
+**Single Target Mode:** after timer  
 
-### **AOE Mode** (first 150 sec)
-
-Used before reset timer expires.
-
-### **Single Target Mode**
-
-Used after reset timer.
-
-Leader uses `inside2()`
+Leader uses `inside2()`  
 Members use `inside1()`
 
-Both reference detection:
+Detection includes:
 
-* specter_fish
-* specter_shark
-* specter_servant
-* Coral
-* YeChun (Boss)
+- specter_fish  
+- specter_shark  
+- specter_servant  
+- Coral  
+- YeChun (boss)
 
-HP detection handled via:
+HP check:
 
-```
+```lua
 PCP.Targethpzero()
 ```
 
 ---
 
-# 🧭 **5. Cave Navigation Logic**
+# 🧭 5. Cave Navigation
 
-Movement guided by:
-
-```
-Boss.gettotargetspot_notstrict(targetX, targetY, tolerance)
+```lua
+Boss.gettotargetspot_notstrict(x, y, tol)
 Boss.isInToleranceArea()
 ```
 
-Initial coordinates:
+Default:
 
 ```
-targetX = 270
-targetY = -24
-```
-
-The same for both leader & members.
-
----
-
-# 🛑 **6. Team Dismissal Logic**
-
-When Boss YeChun dies:
-
-* Delete cave.csv and character CSVs
-* Leader executes `PCP.Dismissteam()`
-* Leader teleports out
-* Members wait for Guild signal
-
-Detection is performed using:
-
-```
-PCP.YeChun_down()
-PCP.team_dismissied()
+X = 270
+Y = -24
 ```
 
 ---
 
-# 🔁 **7. Automation Loop**
+# 🛑 6. Team Dismissal
 
-Every script ends with:
+Boss dies → leader:
+
+- Deletes CSVs  
+- Runs `PCP.Dismissteam()`  
+- Teleports  
+
+Members return to Guild.
+
+---
+
+# 🔁 7. Automation Loop
 
 ```lua
 while true do
@@ -337,51 +224,46 @@ while true do
 end
 ```
 
-Runs continuously until manually stopped.
-
 ---
 
-# 🧪 **8. Key Requirements for Stable Runs**
+# 🧪 8. Stable Run Requirements
 
-✔ All characters must be in **FOE list**
-✔ All characters must use **matching team numbers**
-✔ All images (.bmp) must be in correct folders
-✔ Ensure no leftover CSV files block the run
-✔ Maintain correct skill mapping:
+- FOE list updated  
+- Correct team numbers  
+- All .bmp present  
+- No leftover CSVs  
+- Skill mapping correct  
 
-Leader example:
+**Leader Example:**
 
+```lua
+attackskills = "F5"
+aoe = "333222111"
 ```
-attackskills = "F5" -- Works with Function keys 
-aoe = "333222111" 
-```
 
-Member example:
+**Member Example:**
 
-```
+```lua
 attackskills = "321"
 aoe = "332221"
 ```
 
 ---
 
-# 🟢 **9. How to Start a Run**
+# 🟢 9. Start Sequence
 
-### **Leader**
+### Leader:
+1. Run leader script  
+2. Wait for Guild  
+3. Members join  
 
-1. Start Leader script first
-2. Wait for leader to reach Guild
-3. Leader creates CSVs
-4. Leader waits for members to appear in team
-
-### **Members**
-
-1. Start Member scripts
-2. They will auto-join team once they see their CSV
-3. Follow leader into cave
-4. Attack > Boss dies → exit → Guild
+### Members:
+1. Start scripts  
+2. Auto-join  
+3. Follow leader  
+4. Kill boss → exit → Guild  
 
 ---
 
-# 🎉 **README Completed**
- 
+# 🎉 README Complete
+
