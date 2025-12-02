@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GetImage — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">GetImage</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p><b>GetImage</b> - функция запоминания части экранной области. Возвращает строку в виде "Адрес в памяти|Ширина|Высота|Длина строки в байтах".
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: опционально.
+<br />Работа со свернутым окном: да.
+<br />Работа с перекрытым окном: Да. Привязка к окну обязательна.
+</p>
+<pre>GetImage (&lt;StartX&gt; &lt;StartY&gt; &lt;EndX&gt; &lt;EndY&gt; [type|handle] [abs])
+</pre>
+<p><b>&lt;StartX&gt; &lt;StartY&gt;</b> - координаты левого верхнего угла области поиска.
+<br /><b>&lt;EndX&gt; &lt;EndY&gt;</b> - координаты правого нижнего угла области поиска.
+<br /><b>[type|handle]</b> (необязательно) - тип поиска. Может принимать значения 2 или целое число означающее хендл окна, в котором нужно вести поиск.
+<br /><b>[abs]</b> (необязательно) - этот параметр указывается, если вы ищете пиксели в координатах относительно верхнего левого угла экрана, а не рабочего окна.
+</p>
+<pre>set %a GetImage  (100 100 1000 1000)
+log %a [1 1] - адрес в памяти
+log %a [1 2] - ширина изображения
+log %a [1 3] - высота изображения
+log %a [1 4] - длина строки в байтах
+End_script
+</pre>
+<p>Коды ошибок GetImage:
+<br /><b>-1</b> - упало при поиске, точная причина не известна.
+<br /><b>-2</b> - не нашли открывающую скобку после имени функции.
+</p>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>// Пример 1
+set %a GetImage  (100 100 1000 1000)                 // сохранить в памяти часть экрана от координат 100 100 до 1000 1000
+set #type %a [1 1]                                   // адрес в памяти
+set #a findimage (0 0 901 901 (C:\test.bmp) %arr #type 80 1)    // искать картинку test.bmp на изображении хранящемся в памяти
+                                                                // в качестве типа поиска указан адрес в памяти
+                                                                // искомая картинка на экране уже может отсутствовать, по сути поиск ведётся на скрине
+log #a                                                // результат поиска
+if #a &gt; 0                                             // если изображение найдено 
+     move %arr [1 1] %arr [1 2]                       // переместить курсор на найденное изображение
+end_if
+//set $bmp SaveImage (%a [1 1] C:\Image.bmp)          // если нужно, можно сохранить полученное изображение на диск C:\
+set $b DeleteImage  (%a [1 1])                        // удалить изображение из памяти
+End_script
+</pre>
+<pre>// Пример 2
+// Поиск нескольких картинок на изображении сохранённом в памяти.
+// координаты для GetImage:
+set #startX 0
+set #startY 0
+set #endX 600
+set #endY 600
+
+ // картинки для поиска&#160;: 
+set %image [1] картинка1.bmp
+set %image [2] картинка2.bmp
+set %image [3] картинка3.bmp
+set %path [1] "C:\l2\image"              // путь к картинкам
+set %a GetImage  (#startX #startY #endX #endY)                 // сохранить в памяти часть экрана от координат 0 0 600 600
+set #type %a [1 1]                                   // адрес в памяти
+for #i 1 size(%image) 1                      // цикл поиска картинок, size(%image) - количество картинок в массиве
+    set #a findimage (0 0 600 600 (%path [1]\%image [#i 1]) %arr #type 80 -1 2)    // искать картинки из массива %image на изображении хранящемся в памяти
+    log #a
+    if #a &gt; 0                                    // если картинка найдена
+        move %arr [1 1] %arr [1 2]               // переместить курсор на найденную картинку
+        wait 1000                                // ждать 1 секунду
+    end_if
+end_for
+set $b DeleteImage  (%a [1 1])                                // удалить изображение из памяти
+End_script
+</pre>
+<pre>// Пример 3
+// Поиск нескольких картинок, загруженных в память, на изображении сохранённом в памяти.
+// Т. к. картинки будут загружены в память, поиск будет происходить быстрее, чем если бы они подгружались с HDD.
+// координаты для GetImage:
+set #startX 0        
+set #startY 0
+set #endX 600
+set #endY 600
+ 
+set %path [1] "C:\l2\image"              // путь к картинкам
+
+// картинки, которые будут загружены в память:
+set %image [1] LoadImage (%path [1]\картинка1.bmp)           
+set %image [2] LoadImage (%path [1]\картинка2.bmp)
+set %image [3] LoadImage (%path [1]\картинка3.bmp)
+
+set %a GetImage  (#startX #startY #endX #endY)                 // сохранить в памяти часть экрана от координат 0 0 600 600
+set #type %a [1 1]                                   // адрес в памяти
+for #i 1 size(%image) 1                              // цикл поиска картинок, size(%image) - количество картинок в массиве
+    set #a findimage (0 0 600 600 (%image [#i 1]) %arr #type 80 -1 2)    // искать картинки загруженные в память на изображении хранящемся в памяти
+    log #a                                       // результат поиска
+    if #a &gt; 0                                    // если картинка найдена
+        move %arr [1 1] %arr [1 2]               // переместить курсор на найденную картинку
+        wait 1000                                // ждать 1 секунду
+    end_if
+end_for
+set $b DeleteImage  (%a [1 1])                                // удалить изображение из памяти (не картинки, а часть сохранённой экранной области)
+End_script
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=Findimage" title="Findimage">Findimage</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=DeleteImage" title="DeleteImage">DeleteImage</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=SaveImage" title="SaveImage">SaveImage</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=LoadImage" title="LoadImage">LoadImage</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Printscreen" title="Printscreen">Printscreen</a>
+</p>
+<h2><span id="История_развития"></span><span class="mw-headline" id=".D0.98.D1.81.D1.82.D0.BE.D1.80.D0.B8.D1.8F_.D1.80.D0.B0.D0.B7.D0.B2.D0.B8.D1.82.D0.B8.D1.8F">История развития</span></h2>
+<p><b>2.39</b>
+<br />Добавил функцию запоминания части экранной области 'GetImage (StartX StartY EndX EndY [type|handle] [abs])'. Возвращает строку в виде "Адрес в памяти|Ширина|Высота|Длина строки в байтах/", либо код ошибки.
+</p><p><b>2.41</b>
+<br />Исправил минимальные размеры захватываемой картинки в команде 'getimage' при работе по хэндлу.
+<br />Исправил исключение при работе по хэндлу в команде 'getimage', когда начальные координаты были больше конечных.
+</p>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a  title="Служебная:Категории">Категории</a>: <ul><li><a  class="new" title="Категория:Поиск изображений (страница не существует)">Поиск изображений</a></li><li><a  class="new" title="Категория:Память (страница не существует)">Память</a></li></ul>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=GetImage&amp;oldid=566">https://uopilot.uokit.com/wiki/index.php?title=GetImage&amp;oldid=566</a></div></body>
+</html>
+ 

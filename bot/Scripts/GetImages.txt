@@ -1,0 +1,98 @@
+-- lua
+
+log 'clear'
+log 'mode compact'
+
+local bot = require("Bot/bot")
+local image = require("Bot/image")
+local memory = require("Bot/memory")
+local PCP = require("PCP/PCP")
+local Boss = require("Boss/Boss")
+LeaderName= "hemanth"
+
+ --image.getimage(478, 329, 541, 341 , "appreok")
+
+
+
+
+
+--PCP.setFlag(1)
+--log(PCP.getFlag())
+ --write([[PCP\\cave.csv]])
+-- filedelete([[flag1.bmp]])                                     266, 337
+ --log(fileexists([[flag1.bmp]]),PCP.getFlag())
+--log( image.find_image_flag("flag.bmp"))
+-- image.getimage(559, 741,569, 746 , "flag")
+--filedelete ([[PCP\\cave.csv]])
+--log(fileexists([[PCP\\cave.csv]]))
+---image.inventorydelete("PCP\itemdelete\")
+--image.listFiles("PCP\itemdelete")
+--image.inventorydelete([[PCP\itemdelete\]])
+-- image.getimage(350, 163, 421, 172 , "calender")
+--image.getimage(621, 35, 650, 64, "Arcane\\ICON_SC")
+--image.getimage(621, 35, 650, 64, "Arcane\\ICON_OM")
+--image.getimage(252, 223, 273, 241, "Arcane\\SCDialogue")
+
+--image.getimage(262, 477,273, 484, "PCP\\itemdelete\\Blueness1")
+--image.clickimage("PCP\\itemdelete\\Blueness1.bmp")
+--image.getimage(416, 330,449, 340, "PCP\\deleteok")
+--image.getimage(481, 163,525, 167, "PCP\\deletebox")
+-- while true do
+--log( PCP.YeChun_down(),PCP.Targethpzero(),PCP.YeChun(),memory.getLocation())
+ --log(PCP.spector_servant_down(),PCP.spector_fish_down(),PCP.spector_shark_down(),PCP.spector_servant(),PCP.spector_fish(),PCP.spector_shark(),PCP.Targethpzero() )
+
+
+--  log(image.find_image_target("PCP/specter_servant.bmp"),image.find_image_target("PCP/specter_fish.bmp"),image.find_image_target("PCP/specter_shark.bmp"),PCP.Targethpzero())
+
+-- Store coordinates in a table
+
+
+-- Create a filename string using the coordinates
+
+
+
+
+--//get images of foelist friendlist and blocklist
+--wait("1s")
+--left(614, 187)
+--wait("1s")
+--image.getimagePCP(614, 187,640, 200, "foelist")
+--wait("1s")
+--left(569, 200 )
+--wait("1s")
+--image.getimagePCP(525, 189,569, 200, "friendlist")
+--wait("1s")
+--left(689, 190 )
+--wait("1s")
+--image.getimagePCP(689, 190,722, 197, "blocklist")
+--wait("1s")
+--if bot.getLocation_cords(0) == "-717" and bot.getLocation_cords(1) == "691" then
+    --wait("1s")
+    --left(635, 249 )
+    --wait("1s")
+    --image.getimagePCP(617, 44,650, 62, "ICON_SFD")
+    --wait("1s")
+    --right(635, 249 )
+    --right(635, 249 )
+    --right(635, 249 )
+    --right(635, 249 )
+    --right(635, 249 )
+    --right(635, 249 )
+    --right(635, 249 )
+    --right(635, 249 )
+    --right(635, 249 )
+    --right(635, 249 )
+    --wait("1s")
+    --image.getimagePCP(252, 223, 273, 241, "PCPDialogue")
+    --wait("1s")
+--end
+
+--image.getimagePCP(621, 35, 650, 64, "ICON_YeChun")
+--image.getimagePCP(463, 280,557, 305, "deadbox")
+--image.getimagePCP(621, 35, 650, 64, "ICON_Coral")
+--image.getimagePCP(593, 33,600, 39, "notarget")
+--image.getimagePCP(462, 45,468, 50, "HP")
+--,memory.targetHPpercent()
+
+--50, 49 90, 143 235, 186
+

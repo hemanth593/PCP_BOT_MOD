@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sqrt — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">Sqrt</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p><b>Sqrt</b> - возвращает квадратный корень.
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: Нет.
+<br />Работа со свернутым окном: Да.
+</p>
+<pre>sqrt(x)
+</pre>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>// Пример 1
+set $a sqrt(123)
+msg $a
+</pre>
+<pre>// Пример 2
+//Округление до ближайшего целого числа
+set #a round(sqrt(123))
+msg #a
+</pre>
+<pre>// Пример 3
+set #a 55
+set #b 123
+set #c #a + round(sqrt(#b))   // 55 + 11
+msg #c
+</pre>
+<pre>// Пример 3
+// Корень кубический
+// Для извлечения корня отличного от квадратного
+// необходимо использовать возведение в степень 1/n,
+// где n - нужная степень.
+// Следует понимать, что пилот осуществляет только
+// целочисленное деление и 1/3 будет равно нулю.
+// Чтобы избежать данной проблемы результат деления
+// необходимо предварительно вычислить записать в явном виде.
+set #a 64
+set #b round(power(#a 0,333333))   //вернёт 4, т. к. 64 = 4 в 3й степени
+msg #b
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=Power" title="Power">Power</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Round" title="Round">Round</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Floor" title="Floor">Floor</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Ceil" title="Ceil">Ceil</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Frac" title="Frac">Frac</a>
+</p>
+<h2><span id="История_развития"></span><span class="mw-headline" id=".D0.98.D1.81.D1.82.D0.BE.D1.80.D0.B8.D1.8F_.D1.80.D0.B0.D0.B7.D0.B2.D0.B8.D1.82.D0.B8.D1.8F">История развития</span></h2>
+<p><b>2.32</b>
+<br />Добавил несколько ненужных функций обработки вещественных чисел и строковых переменных. Десятичным разделителем считается запятая. <br />Почти все функции при ошибках возвращают '-1'.
+<br />abs(x) - Возвращает абсолютную величину x.
+<br />round(x) - Возвращает x, округлённый до самого близкого целого числа.
+<br />floor(x) - Возвращает x округлённый до ближайшего целого числа, которое меньше x.
+<br />ceil(x) - Возвращает x округлённый до ближайшего целого числа, которое больше x.
+<br />frac(x) - Возвращает дробную часть x, то есть часть, стоящую позади десятичной точки.
+<br />sqrt(x) - Возвращает квадратный корень из абсолютного значения x.
+<br />power(x n) - Возвращает x в степени n.
+<br />exp(x) - Возвращает e в степени x.
+<br />ln(x) - Возвращает натуральный логарифм от x.
+<br />log(n x) - Возвращает логарифм от x по основанию n.
+<br />sin(x) - Возвращает синус x (в радианах).
+<br />cos(x) - Возвращает косинус x (в радианах).
+<br />tan(x) - Возвращает тангенс x (в радианах).
+<br />arcsin(x) - Возвращает арксинус x.
+<br />arccos(x) - Возвращает арккосинус x.
+<br />arctan(x) - Возвращает арктангенс x.
+<br />degtorad(x) - Преобразовывает градусы в радианы.
+<br />radtodeg(x) - Преобразовывает радианы в градусы.
+<br />trunc(x) - Отбрасывает дробную часть.
+<br />minx(val1 val2 val3 ...) - Возвращает минимальную из величин.
+<br />maxx(val1 val2 val3 ...) - Возвращает максимальную из величин.
+<br />mean(val1 val2 val3 ...) - Возвращает среднее арифметическое.
+<br />point_distance(x1 y1 x2 y2) - Возвращает расстояние между точкой (x1,y1) и (x2,y2).
+<br />point_direction(x1 y1 x2 y2) - Возвращает угол (в градусах) между осью X и вектором с началом в точке (x1,y1) и окончанием в точке (x2,y2).
+<br />lengthdir_x(len dir) - Возвращает горизонтальный x-катет вектора определённый указанной длиной и направлением.
+<br />lengthdir_y(len dir) - Возвращает вертикальный y-катет вектора определённый указанной длиной и направлением.
+<br />в lengthdir_x и lengthdir_y направление dir задаётся в градусах, причем отсчет угла идет от направления "Север" (от оси Y). По часовой стрелке "+", против часовой "-".
+<br />is_real(x) - Возвращает 1, если x число.
+<br />is_string(x) - Возвращает 1, если x является строкой (не число).
+<br />chr(val) - Возвращает символ с ASCI кодом val.
+<br />ord(str) - Возвращает ASCI код первого символа в строке str.
+<br />string_replace(str substr newstr [all]) - Возвращает строку str, в которой встречающаяся подстрока substr будет заменена на подстроку newstr.
+<br />string_count(substr str) - Возвращает число, показывающее, сколько раз подстрока substr встречается в строке str.
+<br />string_lower(str) - Возвращает строку str, записанную маленькими буквами.
+<br />string_upper(str) - Возвращает строку str, записанную большими буквами.
+<br />string_letters(str) - Возвращает строку str, выбрасывая из неё все числа.
+<br />string_digits(str) - Возвращает строку str, выбрасывая из неё все буквенные символы.
+<br />Pi - 3,1415926535897932385.
+</p>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a  title="Служебная:Категории">Категория</a>: <ul><li><a  class="new" title="Категория:Преобразование чисел (страница не существует)">Преобразование чисел</a></li></ul>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=Sqrt&amp;oldid=751">https://uopilot.uokit.com/wiki/index.php?title=Sqrt&amp;oldid=751</a></div></body>
+</html>
+ 

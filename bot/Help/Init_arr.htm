@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Init arr — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">Init arr</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p><b>Init_arr</b> - команда присваивания нескольких элементов массива одной строкой.
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: Нет.
+<br />Работа со свернутым окном: Да.
+</p>
+<pre>init_arr &lt;массив&gt; [(номер_строки [число_столбцов [начальный_столбец]])] &lt;набор_значений&gt;
+</pre>
+<p><b>&lt;массив&gt;</b> - имя массива.
+<br /><b>[номер_строки]</b> - в какую строку записывать значения.
+<br /><b>[число_столбцов]</b> - во сколько столбцов записывать значения.
+<br /><b>[начальный_столбец]</b> - с какого начать записывать.
+</p>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>// Пример 1
+init_arr %a (1) hour&#160;: min&#160;: sec     // записать текущее время в 1 строку (5 элементов массива)
+msg %a [1]                           // показать в сообщении
+End_script
+</pre>
+<pre>// Пример 2
+init_arr %a (1 5) day . month . year hour&#160;: min&#160;: sec     // записать текущие дату и время в 2 строки по 5 элементов
+msg %a [1]     %a [2]                                     // показать в сообщении
+End_script
+</pre>
+<pre>// Пример 3
+set $a У попа была собака          // разбить строку на элементы
+init_arr %a (1) $a
+msg %a [1 1]   %a [1 2]   %a [1 3]   %a [1 4]
+End_script
+</pre>
+<pre>// Пример 4
+init_arr %arr (1) 360 197 13529609    // задать координаты и цвет в одну строку
+if %arr [1 1] %arr [1 2] %arr [1 3]
+    msg Цвет найден
+    move %arr [1 1] %arr [1 2]        // переместить курсор в координаты 360 197
+    End_script
+end_if
+</pre>
+<pre>// Пример 5
+init_arr %a (1) 360 197 13529609    // задать координаты и цвет в одну строку
+set delimiter ' '                   // установить разделитель между элементами 'пробел'
+if %a [1]                           // тоже самое что if %a [1 1] %a [1 2] %a [1 3]
+    msg Цвет найден
+    End_script
+end_if
+</pre>
+<pre>// Пример 6
+init_arr %a (1) 360 197 13529609    // задать координаты и цвет, первая строка
+init_arr %a (2) 424 511 15979864   // задать координаты и цвет, вторая строка
+set delimiter ' '                   // установить разделитель между элементами 'пробел'
+    //обратите внимание, когда используется больше 1 условия, то обязательно нужны круглые скобки.
+if (%a [1]) and (%a [2])                           // тоже самое что if %a [1 1] %a [1 2] %a [1 3] and %a [2 1] %a [2 2] %a [2 3]
+    msg Цвет найден
+    End_script
+end_if
+</pre>
+<pre>// Пример 7
+init_arr %a 11 32 43 46        // одномерный массив, 4 эл-та (элементы [1] [2] [3] [4])
+msg %a [1]   %a [2]   %a [3]   %a [4]
+End_script
+</pre>
+<pre>// Пример 8 
+init_arr %a (2) 13 24 35       // во 2-ю строку пишем в 3 столбца, начиная с 1-го (элементы [2, 1] [2, 2] [2, 3])
+msg %a [2 1]   %a [2 2]   %a [2 3]
+End_script
+</pre>
+<pre>// Пример 9 
+init_arr %a (3, 2) 5 6 7 8     // в 3-ю строку пишем в 2 столбца, начиная с 1-го (получится 2 строки, элементы [3, 1] [3, 2] [4, 1] [4, 2])
+msg %a [3 1]   %a [3 2]   %a [4 1]   %a [4 2]
+End_script
+</pre>
+<pre>// Пример 10
+init_arr %a (3, 2, 7) 5 6 7 8      // в 3-ю строку пишем в 2 столбца, начиная с 7-го (получится 2 строки, элементы [3, 7] [3, 8] [4, 7] [4, 8])
+msg %a [3 7]   %a [3 8]   %a [4 7]   %a [4 8]
+End_script
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=Set" title="Set">Set</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=%D0%9C%D0%B0%D1%81%D1%81%D0%B8%D0%B2%D1%8B" title="Массивы">Массивы</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Sort_array" title="Sort array">Sort array</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Load_array" title="Load array">Load array</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Save_array" title="Save array">Save array</a>
+</p>
+<h2><span id="История_развития"></span><span class="mw-headline" id=".D0.98.D1.81.D1.82.D0.BE.D1.80.D0.B8.D1.8F_.D1.80.D0.B0.D0.B7.D0.B2.D0.B8.D1.82.D0.B8.D1.8F">История развития</span></h2>
+<p><b>2.30</b>
+<br />Добавил команду присваивания нескольких элементов массива одной строкой:
+</p>
+<pre>init_arr &lt;массив&gt; [(номер_строки [число_столбцов [начальный_столбец]])] &lt;набор_значений&gt;
+</pre>
+<p>Разделителями слов считаются те же символы, что и в остальных командах. Исходный массив не удаляется. Отсутствующие параметры по-умолчанию принимаются равными '1'
+</p>
+<pre>init_arr %a 11 32 43 46 // одномерный массив, 4 эл-та (элементы [1] [2] [3] [4])
+init_arr %a (2) 13 24 35 // во 2-ю строку пишем в 3 столбца, начиная с 1-го (элементы [2, 1] [2, 2] [2, 3])
+init_arr %a (3, 2) 5 6 7 8 // в 3-ю строку пишем в 2 столбца, начиная с 1-го (получится 2 строки, элементы [3, 1] [3, 2] [4, 1] [4, 2])
+init_arr %a (3, 2, 7) 5 6 7 8 // в 3-ю строку пишем в 2 столбца, начиная с 7-го (получится 2 строки, элементы [3, 7] [3, 8] [4, 7] [4, 8]
+</pre>
+<p><b>2.32</b>
+<br />Добавил проверку на круглость скобок в команде 'init_arr'. Сообщение выводим, но выполнение не прерываем.
+<br />Исправил обязательное наличие пробела перед скобками в команде 'init_arr'.
+</p><p><b>2.38</b>
+<br />Исправил изменение регистра первого элемента, при присваивании массива в команде 'init_arr'.
+</p>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a  title="Служебная:Категории">Категория</a>: <ul><li><a  class="new" title="Категория:Массивы (страница не существует)">Массивы</a></li></ul>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=Init_arr&amp;oldid=618">https://uopilot.uokit.com/wiki/index.php?title=Init_arr&amp;oldid=618</a></div></body>
+</html>
+ 

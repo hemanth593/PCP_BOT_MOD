@@ -1,0 +1,22 @@
+--lua
+local memory = require("Bot/memory")
+
+local TO = findwindow("Talisman Online")
+function charName()
+    local CLIENT = 0x00400000
+    local CHAR_NAME_POINTER = memory.CHAR_HP()
+    local name = readmem(CHAR_NAME_POINTER + 0x3C4, "s", 30)
+    if string.match(name, "^[%w]+$") then return name
+    else
+        return readmem(readmem(CHAR_NAME_POINTER + 0x3C4, "d") + 0x0, "s", 30)
+    end
+end
+if TO then
+    for i = 1, #TO
+    do
+        workwindow(TO[i][1])
+        local name = charName()
+        print(charName())
+        setwindowtext(TO[i][1], name)
+    end
+end

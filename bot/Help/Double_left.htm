@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Left — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">Left</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p>Клик мышкой в указанные координаты.
+<br />Работают не во всех приложениях. Можно использовать аналог <a href="https://uopilot.uokit.com/wiki/index.php?title=Kleft" title="Kleft">Kleft</a>.
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: опционально.
+<br />Работа со свернутым окном: только с привязкой к окну.
+</p>
+<pre>left &lt;х&gt; &lt;у&gt; [+х +у [-х -у]] [abs|handle] [nooffset] [~^rlm] - клик левой кнопкой
+right &lt;х&gt; &lt;у&gt; [+х +у [-х -у]] [abs|handle] [nooffset] [~^rlm] - клик правой кнопкой
+middle &lt;х&gt; &lt;у&gt; [+х +у [-х -у]] [abs|handle] [nooffset] [~^rlm] - клик средней кнопкой
+double_left &lt;х&gt; &lt;у&gt; [+х +у [-х -у]] [abs|handle] [nooffset] [~^rlm] - двойной клик левой кнопкой 
+double_right &lt;х&gt; &lt;у&gt; [+х +у [-х -у]] [abs|handle] [nooffset] [~^rlm] - двойной клик правой кнопкой
+double_middle &lt;х&gt; &lt;у&gt; [+х +у [-х -у]] [abs|handle] [nooffset] [~^rlm] - двойной клик средней кнопкой 
+</pre>
+<p><b>&lt;x&gt;</b> - x координата клика.
+<br /><b>&lt;y&gt;</b> - y координата клика.
+<br /><b>+х +у</b> - случайное смещение в '+' в указанном пределе. 
+<br /><b>-х -у</b> - случайное смещение в '-' в указанном пределе.
+<br /><b>[abs]</b> - признак клика по абсолютным координатам экрана, а не относительным окна.
+<br /><b>[handle]</b> - хендл окна для клика.
+<br /><b>[nooffset]</b> - игнорировать смещение указанное в переменных clickoffsetx и clickoffsety.
+<br /><b>~^rlm</b> - клик: <b>~</b> - с шифтом, <b>^</b> - c контролом, <b>r</b> - с правой кнопкой, <b>l</b> - с левой кнопкой, <b>m</b> - со средней кнопкой.
+Если указано несколько модификаторов, то должны быть написаны слитно друг с другом. С альтом просто так не работает, придется его сначала зажимать sendex'ом.
+<br /><br />Можно установить паузу между нажатием и отпусканием кнопки мыши с помощью  'MouseClickDelay'.
+</p>
+<pre>set MouseClickDelay 30     //установить паузу в 30 мсек.
+// или так
+set MouseClickDelay 30 + random(30)   // установить паузу в 30-59 мсек.
+</pre>
+<p>Иногда требуется сделать клик со смещением:
+</p>
+<pre>set Clickoffsetx 50    // смещение вправо на 50 пикселей
+set Clickoffsety 30    // смещение вниз на 30 пикселей
+
+set Clickoffsetx -40   // смещение влево на 40 пикселей
+set Clickoffsety -60   // смещение вверх на 60 пикселей
+</pre>
+<p>Чтобы игнорировать смещение заданное clickoffsetx и clickoffsety:
+</p>
+<pre>left 100 100 nooffset
+</pre>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>// Пример 1
+left 100 200      // клик в координаты 100 200
+End_script
+</pre>
+<pre>// Пример 2
+right 100 200     // клик правой кнопкой в координаты 100 200
+End_script
+</pre>
+<pre>// Пример 3
+set #x 200
+set #y 250
+left #x #y        // клик в координаты 200 250
+End_script
+</pre>
+<pre>// Пример 4
+left 150 200 abs  // клик в абсолютные координаты 150 200
+End_script
+</pre>
+<pre>// Пример 5
+left 200 300 5 10 7 12   // клик в координаты: X = от 205 до 193 и Y от 310 до 288
+                         // 5 и 10 означают что клик может быть в + от указанных координат
+                         // 7 и 12 означают что клик может быть в - от указанных координат                                                   
+End_script
+</pre>
+<pre>// Пример 6
+left 200 500 100 50      // клик в координаты: X = от 200 до 300 и Y от 500 до 550
+End_script 
+</pre>
+<pre>// Пример 7
+set clickoffsetx 5       // смещение для координаты X
+set clickoffsety 5       // смещение для координаты Y
+left 0 0                 // клик в координаты 5, 5
+End_script
+</pre>
+<pre>// Пример 8
+double_left 110 300      // двойной клик левой кнопкой в координаты 110 300
+End_script
+</pre>
+<pre>// Пример 9
+double_right 110 300     // двойной клик правой кнопкой в координаты 110 300
+End_script
+</pre>
+<pre>// Пример 10
+// Если после координат указан хендл, то клик будет сделан в указанное окно.
+// Независимо от того какое окно рабочее.
+set #google Findwindow (Google)    // поиск окна Google
+set #yandex Findwindow (Yandex)    // поиск окна Yandex
+left 236, 273 #google              // клик в координаты 236, 273 в окно Google 
+left 395, 259 #yandex              // клик в координаты 395, 259 в окно Yandex
+End_script
+// Учтите, что в данном примере клик может быть со смещением.
+// К примеру, если надо сделать клик во флеш игре, то для поиска нужного окна можно воспользоваться скриптом: <a href="https://uopilot.uokit.com/wiki/index.php?title=%D0%9F%D0%BE%D0%B8%D1%81%D0%BA_%D0%BF%D1%83%D1%82%D0%B8_%D0%BA_%D0%B4%D0%BE%D1%87%D0%B5%D1%80%D0%BD%D0%B5%D0%BC%D1%83_%D0%BE%D0%BA%D0%BD%D1%83" title="Поиск пути к дочернему окну">Поиск пути к дочернему окну</a> 
+</pre>
+<pre>// Пример 11
+set clickoffsetx 30      // смещение для координаты X
+set clickoffsety 20      // смещение для координаты Y
+left 0 0                 // клик в координаты 30, 20
+left 10 10 nooffset      // клик в координаты 10 10
+End_script
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=Kleft" title="Kleft">Kleft</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Move" title="Move">Move</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Left_down" title="Left down">Left down</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Kleft_down" title="Kleft down">Kleft down</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Drag" title="Drag">Drag</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Get_mouse_pos" title="Get mouse pos">Get mouse pos</a>
+</p>
+<h2><span id="История_развития"></span><span class="mw-headline" id=".D0.98.D1.81.D1.82.D0.BE.D1.80.D0.B8.D1.8F_.D1.80.D0.B0.D0.B7.D0.B2.D0.B8.D1.82.D0.B8.D1.8F">История развития</span></h2>
+<p><b>2.11</b>
+<br />Добавил команды альтернативных кликов мышью kleft, kright, double_kleft, double_kright, kleft_down, kleft_up, kright_down, kright_up. работают там, где не работают обычные команды, но захватывают мышь. Синтаксис тот-же.
+<br />Добавил возможность указания задержки между нажатием и отпусканием кнопки мыши в мышиных командах.
+</p><p><b>2.15</b>
+<br />Добавил команды pleft, pright, double_pleft, double_pright, pleft_down, pleft_up, pright_down, pright_up. Аналогично команде post.
+</p><p><b>2.18</b>
+<br />Исправил kleft по относительным координатам.
+</p><p><b>2.19</b>
+<br />Исправил 'kleft' по абсолютным координатам.
+<br />Добавил клики с модификаторами 'left x y [abs] [~^rlm]'. ~ - с шифтом, ^ - c контролом, r - одновременно с правой, l - с левой, m - со средней. если указано несколько модификаторов, то должны быть написаны слитно друг с другом. работает для всех кроме тех, что с приставкой 'k'. с альтом просто так не работает, придется его сначала зажимать sendex'ом.
+</p><p><b>2.30</b>
+<br />Подправил клики по отрицательным координатам в команде 'kleft'.
+</p><p><b>2.36</b>
+<br />Добавил настройку, переключающую работу команд типа 'kleft' в вариант версии 2.17.
+<br />Добавил переменные смещения кликов мышью и команды 'move': clickoffsetx', 'clickoffsety'
+</p>
+<pre>set clickoffsetx 5
+set clickoffsety 5
+left 0 0
+ //кликнет в координаты 5, 5
+</pre>
+<p>Добавил в клики мышью возможность задания случайного смещения координат в указанных пределах:
+</p>
+<pre>left &lt;х&gt; &lt;у&gt; [+х +у [-х -у]] [abs|handle] [~^rlm]
+move &lt;х&gt; &lt;у&gt; [+х +у [-х -у]] [abs|handle]
+</pre>
+<p><b>2.36.1</b>
+<br />Добавил во все команды перемещения курсора и кликов мышью, возможность указать хендл подопытного окна вместо 'abs'. Слегка изменился синтаксис: 
+</p>
+<pre>left &lt;x&gt; &lt;y&gt; [abs | handle] [~^rlm]
+</pre>
+<p><b>2.36.2</b>
+<br />Добавил переменную 'MouseClickDelay' - устанавливает задержку между нажатием и отпускание кнопки. Значения изменяются только для текущего скрипта.
+</p><p><b>2.41</b>
+<br />Исправил клики мышкой с модификаторами.
+<br />В клики мышкой добавил параметр "nooffset", который позволяет игнорировать смещение, указанное в переменных clickoffsetx и clickoffsety. 
+</p>
+<pre>left 100 100 nooffset
+</pre>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a  title="Служебная:Категории">Категория</a>: <ul><li><a  class="new" title="Категория:Мышь (страница не существует)">Мышь</a></li></ul>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=Left&amp;oldid=630">https://uopilot.uokit.com/wiki/index.php?title=Left&amp;oldid=630</a></div></body>
+</html>
+ 

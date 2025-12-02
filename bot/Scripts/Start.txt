@@ -1,0 +1,21 @@
+start_script 7
+start_script 6
+start_script 3
+start_script 4
+start_script 5
+//stop_script
+wait 10s
+stop_script 7
+stop_script 6
+stop_script 3
+stop_script 4
+stop_script 5
+ wait 5s
+start_script 7
+start_script 6
+start_script 3
+start_script 4
+start_script 5
+stop_script
+
+

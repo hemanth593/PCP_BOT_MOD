@@ -1,0 +1,225 @@
+--[[ Reading game memory --]]
+
+
+
+local mobs = {}
+--local bot = require("Bot/bot")
+local cred = require("Bot/cred")
+local memory = require("Bot/memory")
+local image = require("Bot/image")
+local cords = require("Bot/cords")
+local bot = require("Bot/bot")
+local travel = require("Bot/travel")
+
+
+
+local getX = memory.getX
+local getY = memory.getY
+--local cave = require("BC/InsideBC")
+
+--times
+MS = 200
+M = 500
+S = 1000
+SS = 2000
+SSS = 3000
+
+local path = {
+    {xY = {}, via = {}},
+	{xY = {}, via = {}}	
+}
+
+function mobs.gettotargetspot(x,y)
+	log("relocating")
+	local gettotarget = {
+        {xY = {x,y}, via = {920, 135}},
+	}
+	mobs.travelPath(gettotarget)
+end
+
+local north = {
+    {xY = {304, -452}, via = {941, 95}},
+    {xY = {317, -476}, via = {940, 154 }},
+    {xY = {290, -480}, via = {875, 122 }}
+}
+
+function mobs.DRspot()
+	log("relocating")
+	mobs.travelPath(north)
+end
+
+ local DR2= {
+    {xY = {1096, 1710}, via = {922, 142 }},
+    {xY = {1086,1701}, via = {903, 130 }},
+    {xY = {1075,1703}, via = {901, 111 }},
+    {xY = {1058,1701}, via = {892, 118 }},
+    {xY = {1048,1705}, via = {902, 109 }},
+    {xY = {1041,1723}, via = {907, 85 }},
+    {xY = {1048,1736}, via = {930, 94 }},
+    {xY = {1064,1736}, via = {945, 115 }},
+    {xY = {1082,1728}, via = {948, 128 }},
+    {xY = {1087,1734}, via = {927, 105 }},
+    {xY = {1095,1724}, via = {932, 131 }}
+}
+
+function mobs.DR2spot()
+	log("relocating")
+	mobs.travelPath(DR2)
+end
+
+
+  local DR4= {
+    {xY = {631,2396}, via = {891, 102  }},
+    {xY = {636,2411}, via = {927, 90 }},
+    {xY = {657,2411}, via = {953, 115 }},
+    {xY = {665,2400}, via = {932, 133 }},
+    {xY = {656,2387}, via = {904, 136 }},
+    {xY = {648, 2388}, via = {905, 114}}
+}
+
+
+function mobs.DR4spot()
+	log("relocating")
+	mobs.travelPath(DR4)
+end
+
+
+  local DR5= {
+    {xY = {631,2396}, via = {891, 102  }},
+    {xY = {636,2411}, via = {927, 90 }},
+    {xY = {657,2411}, via = {953, 115 }},
+    {xY = {665,2400}, via = {932, 133 }},
+    {xY = {656,2387}, via = {904, 136 }},
+    {xY = {648, 2388}, via = {905, 114}}
+}
+
+
+function mobs.DR5spot()
+	log("relocating")
+	mobs.travelPath(DR5)
+end
+
+
+
+
+
+
+
+function mobs.travelPath(path)
+    for i, step in ipairs(path) do
+        local xY = step.xY
+        local via = step.via
+
+        local travelX = memory.getX()
+        local travelY = memory.getY()
+
+        if travelX ~= xY[1] or travelY ~= xY[2] then
+            local attempt = 1
+            local maxAttempts = 10
+            local stepSize = 1
+            local direction = 1 
+            
+            while attempt <= maxAttempts do
+                local adjustedVia = {via[1] + (direction * stepSize), via[2]}
+                travel.miniMap(xY, adjustedVia)
+                if memory.getX() == xY[1] and memory.getY() == xY[2] then
+                    break 
+                else
+                    direction = -direction
+                    attempt = attempt + 1
+                end
+            end
+            local newTravelX = memory.getX()
+            local newTravelY = memory.getY()
+        else
+	    log("Out1")
+            travel.miniMap(xY)
+        end
+    end
+    log("Out")
+end
+
+
+function mobs.dead()
+	local name = memory.charName()
+	local CHARDEAD = "b"
+	local hp = memory.get_current_HP()
+	if hp < 1 then
+	wait(S) 
+	log(name.." is Dead!")
+	wait(S)
+	if CHARDEAD ~= nil then
+		for i = 1, #CHARDEAD
+		do
+		log("Trying to use Jackstraw")
+		left(cords.revive.jackstrawok[1], cords.revive.jackstrawok[2]) wait("3s")
+		end
+		end
+        local hpn = memory.get_current_HP()
+		if hpn < 1 then
+			log("Jackstraw not found, Reviving normal...")
+            left(cords.revive.okbutton[1], cords.revive.okbutton[2]) wait("3s")
+            end
+        log(name.." is Live Again !")
+		mobs.start()
+	end
+end
+
+
+
+
+
+function mobs.verifymobs()
+	if image.find_image("mobs.bmp") == 1 then 
+		return 1
+	else
+		log("Courage Badges not exceeded in inventory")
+		return 0
+	end
+end
+
+
+function mobs.attack(attackskills)
+	if memory.mount_status() == 1 then
+		wait(300)
+		send(mountkey)
+		wait("2s")
+    	end
+	while memory.Battle_Status() == 1 do
+		send("Tab")
+		wait(100)
+		send(attackskills)
+	end
+	wait("2s")
+end
+
+
+
+function mobs.auto_attack_on_rev1()
+    if image.find_image("ok.bmp") == 1 then
+        wait(300)
+        left(429, 338)
+        wait(300)
+    else
+                wait(100)
+                send (attackskills)
+    end
+end
+function mobs.pcp_suwan1()
+    if image.find_image("norevok.bmp") == 1 then
+        wait(300)
+        left(515, 468)
+        wait(500)
+    else
+         if image.find_image("suwan.bmp") == 1 or image.find_image("sanyu.bmp") == 1 or image.find_image("lusalon.bmp") == 1 or image.find_image("Lauhuan.bmp") == 1 then
+
+                wait(100)
+                send (attackskills)
+        else
+                send("TAB")
+                wait(100)
+        end
+
+    end
+end
+return mobs

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dir — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">Dir</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p><b>Dir</b> - команда вывода дерева каталогов. Возвращает дерево в указанный массив, с разбивкой по столбцам. Имя файла можно не указывать. При указании в качестве параметров только имени массива, возвращает текущий каталог. 
+<br />Переменная 'errorlevel' содержит количество найденных элементов.
+<br />Поддерживается поиск файлов по маске.
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: Нет.
+<br />Работа со свернутым окном: Да.
+</p>
+<pre>dir (%resultarray [Path [Filemask]])
+</pre>
+<p>Где:
+<br /><b>%resultarray</b> - массив, в который будет записан результат.
+</p>
+<pre>Возвращает по столбцам:
+  1) Полный корректный адрес с "\", именем файла, расширением.
+  2) Адрес. Полный адрес слепленный в нормальную строку с "\".
+  3) Имя файла без расширения.
+  4) Расширение файла.
+  5) Размер.
+  6) Атрибуты.
+  7) Дата.
+  8) Время.
+  9) Уровень вложенности для пункта 10.
+  10) Путь с разбивкой 1 папка 1 столбец (для вложенных папок и файлов)
+</pre>
+<p><b>Path</b> - необязательный параметр. Путь к директории.
+<br /><b>Filemask</b> - необязательный параметр. Расширение для поиска по маске. Регистронезависимо: 
+</p>
+<pre>*.ini;*.wav            - соответствует любым файлам с расширениями 'ini' или 'wav'
+*.*|*.exe              - соответствует любым файлам, кроме файлов с расширением 'EXE'
+*.mp3;*.wav|?.*;??.*   - соответствует любым файлам с расширениями 'mp3' и 'wav', за исключением файлов у которых имя состоит из одного или двух символов.
+
+</pre>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>// Пример 1
+log clear
+log mode compact
+set %a [1] 123
+set %a [2] 456
+// Для примера будут созданы папки и файлы 'txt'
+dircreate ("C:\folder987\folder654")               // создать на диске 'C:\' папку 'folder987' и вложенную папку 'folder654'
+save_array %a C:\folder987\folder654\fail321.txt   // сохранить массив в папку 'folder654'
+save_array %a C:\folder987\fail456.txt             // сохранить массив в папку 'folder987'
+wait 500
+ 
+// Поиск файлов с расширением 'txt' в папке 'folder654'
+dir (%result1 C:\folder987\folder654 *.txt*)
+log Найдено файлов: errorlevel
+// log size(%result1) - так тоже можно узнать количество файлов
+if  size(%result1) &gt; 0
+    log %result1 [1 1]    - путь к файлу, с именем и расширением
+    log %result1 [1 2]    - путь к файлу
+    log %result1 [1 3]    - имя
+    log %result1 [1 4]    - расширение
+    log %result1 [1 5]    - размер
+    log %result1 [1 6]    - атрибуты
+    log %result1 [1 7]    - дата
+    log %result1 [1 8]    - время
+    log %result1 [1 9]    - уровень вложенности
+    log %result1 [1 10]   - путь с разбивкой (если 9й столбец содержит 0, то будет пустым)
+end_if
+log
+log --------------------
+log
+
+// Поиск файлов с расширением 'txt' в папке 'folder987'
+dir (%result2 C:\folder987 *.txt*)                // поиск файлов с расширением 'txt'
+log Найдено файлов: errorlevel
+if  size(%result2) &gt; 0
+    for #i 1 size(%result2)                       // цикл для вывода пути всех найденных файлов в лог
+       log Путь к файлам: %result2 [#i 1]
+    end_for
+end_if
+log
+log --------------------
+log
+
+// Получить в массив информацию обо всех папках и файлах, находящихся на диске 'C:\' в папке 'folder987'
+dir (%result3 C:\folder987)
+log Найдено файлов и папок: errorlevel
+if  size(%result3) &gt; 0
+    for #i 1 size(%result3)                   // цикл для вывода пути всех найденных файлов в лог
+       log Путь к файлам и папкам: %result3 [#i 1]
+    end_for
+end_if
+  
+// Можно сохранить результаты поиска:
+save_array %result1 C:\result1.txt
+save_array %result2 C:\result2.txt
+save_array %result3 C:\result3.txt
+End_script
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=DirCreate" title="DirCreate">DirCreate</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=DirRemove" title="DirRemove">DirRemove</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=FileCopy" title="FileCopy">FileCopy</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=FileDelete" title="FileDelete">FileDelete</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=FileRename" title="FileRename">FileRename</a>
+</p>
+<h2><span id="История_развития"></span><span class="mw-headline" id=".D0.98.D1.81.D1.82.D0.BE.D1.80.D0.B8.D1.8F_.D1.80.D0.B0.D0.B7.D0.B2.D0.B8.D1.82.D0.B8.D1.8F">История развития</span></h2>
+<p><b>2.30</b>
+<br />добавил команду вывода дерева каталогов 'dir (%resultArray [path [filemask]])'. возвращает дерево в указанный массив, с разбивкой по столбцам. имя файла можно не указывать. при указании в качестве параметров только имени массива, возвращает текущий каталог. переменная 'errorlevel' содержит количество найденных элементов
+</p>
+<pre>   дата_время размер атрибуты папка папка файл
+   15.10.2008 15:14:04 271696 A util VNC4 vncviewer.exe
+   пример:
+       set logging on
+       set $path \
+       set $file *pilot* 
+       dir (%dir $path $file)
+       for #i 1 size(%dir)
+         set $s  	
+         for #ii 4 size(%dir[1])
+             if %dir [#i #ii] = ""
+                 break
+             end_if  
+           set $s $s \%dir [#i #ii]
+         end_for
+         set logging #i -&gt; $path$s
+       end_for
+       end_script
+   поддерживается поиск файлов по маске, регистронезависимо:
+       '*.ini;*.wav'          - соответствует любым файлам с расширениями 'ini' или 'wav'
+       '*.*|*.exe'            - соответствует любым файлам, кроме файлов с расширением 'EXE'
+       '*.mp3;*.wav|?.*;??.*' - соответствует любым файлам с расширениями 'mp3' и 'wav', за исключением файлов у которых имя состоит из одного или двух символов.
+</pre>
+<p><b>2.33</b>
+<br />Исправил вывод найденного пути в команде 'dir'.
+<br />Переделал команду 'dir' по предложению DarkMaster'а.
+</p>
+<pre>   Возвращает по столбцам:
+   1) Полный корректный адрес с "\", именем файла, расширением.
+   2) Адрес. Полный адрес слепленный в нормальную строку с "\".
+   3) Имя файла без расширения.
+   4) Расширение файла.
+   5) Размер.
+   6) Атрибуты.
+   7) Дата.
+   8) Время.
+   9) Уровень вложенности для пункта 10.
+  10) Путь с разбивкой 1 папка 1 столбец (для вложенных папок и файлов)
+</pre>
+<p><b>2.38</b>
+<br />Подправил команду 'dir', у каталогов больше не обрабатывается расширение.
+</p>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a  title="Служебная:Категории">Категория</a>: <ul><li><a  class="new" title="Категория:Файлы (страница не существует)">Файлы</a></li></ul>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=Dir&amp;oldid=515">https://uopilot.uokit.com/wiki/index.php?title=Dir&amp;oldid=515</a></div></body>
+</html>
+ 

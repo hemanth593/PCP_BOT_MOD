@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Send — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">Send</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p><b>Send</b> - используется для отправки нажатий клавиш в приложения.
+<br />Если параметр распознан как клавиша, то учитывается текущая раскладка. Т. е. 'send q' при русской раскладке напишет 'й'. Чтобы узнать текущую раскладку используйте <a href="https://uopilot.uokit.com/wiki/index.php?title=Getlayout" title="Getlayout">Getlayout</a>.
+<br />Если параметр не распознан как управляющая клавиша, то он посылается как текст. Т. е. 'Send qq' будет распознан как текст и напишет 'qq' при любой раскладке.
+<br />Для нажатия модификаторов Ctrl, Alt, Shift используйте <a href="https://uopilot.uokit.com/wiki/index.php?title=Sendex" title="Sendex">Sendex</a>.
+<br />Может работать не во всех приложениях, тогда используйте аналог <a href="https://uopilot.uokit.com/wiki/index.php?title=Send217" title="Send217">Send217</a>.
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: необходима.
+<br />Работа в свернутом окне: да.
+</p>
+<pre>Send &lt;клавиша [пауза]&gt; | &lt;текст&gt;
+</pre>
+<p>Где:
+<br /><b>&lt;клавиша&gt;</b> - клавиша для нажатия, не односимвольные клаввиши заключается в {}.
+<br /><b>[пауза]</b> - необязательный параметр, указывается в миллисекундах (1 секунда = 1000 мсек).
+<br /><b>&lt;текст&gt;</b> - если параметр не распознан как управляющая клавиша, то он посылается как текст.
+</p>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>// Пример 1
+Send Привет      //напишет 'Привет'
+</pre>
+<pre>// Пример 2
+Send {F1}        //нажать клавишу 'F1'
+</pre>
+<pre>// Пример 3
+Send {Enter}     //нажать 'Enter'
+</pre>
+<pre>// Пример 3
+//В зависимости от раскладки напишет 'q' или 'й'
+Send q 2000      //нажать клавишу 'q' и ждать 2 секунды (1 секунда = 1000 мсек)        
+</pre>
+<pre>// Пример 4
+set $a F3
+send $a          //нажать клавишу 'F3'
+</pre>
+<pre>// Пример 5
+set #a 3
+send {F#a}       //нажать клавишу 'F3'
+</pre>
+<pre>// Пример 6
+set $string "mymail@mail.ru"
+send $string                      //напечатает строку mymail@mail.ru, кавычек не будет
+</pre>
+<pre>// Пример 7
+init_arr %a (1) Hour&#160;: Min&#160;: Sec
+send %a [1]                       //напечатает текущее время
+</pre>
+<pre>// Пример 8
+//В операторе send вы можете использовать строковые, числовые и зарезервированные переменные, а также их сочетания:
+set $a Сейчас
+set #b hour
+send $a #b часов min минут
+Результат: Сейчас 14 часов 27 минут.
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=Send217" title="Send217">Send217</a><br />
+<a href="https://uopilot.uokit.com/wiki/index.php?title=Sendex" title="Sendex">Sendex</a><br />
+<a href="https://uopilot.uokit.com/wiki/index.php?title=Post" title="Post">Post</a><br />
+<a href="https://uopilot.uokit.com/wiki/index.php?title=Say" title="Say">Say</a><br />
+<a href="https://uopilot.uokit.com/wiki/index.php?title=Send_down" title="Send down">Send_down</a><br />
+<a href="https://uopilot.uokit.com/wiki/index.php?title=Sendex_down" title="Sendex down">Sendex_down</a><br />
+<a href="https://uopilot.uokit.com/wiki/index.php?title=SetSelectedText" title="SetSelectedText">SetSelectedText</a>
+</p>
+<h2><span id="История_развития"></span><span class="mw-headline" id=".D0.98.D1.81.D1.82.D0.BE.D1.80.D0.B8.D1.8F_.D1.80.D0.B0.D0.B7.D0.B2.D0.B8.D1.82.D0.B8.D1.8F">История развития</span></h2>
+<p><b>1.01 beta 7</b>
+</p>
+<pre>Send &lt;клавиша [пауза]&gt; | &lt;текст&gt;
+</pre>
+<p>"Нажать" клавишу и ждать указанное число миллисекунд. Если параметр не распознан как управляющая клавиша, то он посылается как текст. В последнем случае команда работает аналогично команде say, за исключением завершающего Enter'а.
+</p><p><b>1.07 beta 8</b>
+<br />Немного изменена посылка одиночных клавиш командой send и со вкладки Общее.
+<br />Send посылает текст по одной клавише. можно задавать список клавиш, после первой нераспознанной клавиши, все до конца строки посылается сплошным текстом. если первое слово клавиша, а второе число, то считаем, что это задержка после клавиши.
+</p><p><b>2.18</b>
+<br />Почти полностью переписал 'send' и 'post'. Теперь больше похоже на правду. Они больше не посылают символ как таковой, а нажимают клавишу, на которой этот символ нарисован, соответственно что получится - зависит от того какая раскладка выбрана в приложении. Если нужно, то нажимают модификаторы [Ctrl,Alt,Shift], это к сожалению срабатывает для всей системы, а не только для выбранного приложения.
+Они теперь работают следующим образом, '{}' для функциональных клавиш  не требуются, но обрабатываются в зависимости от того как указаны.
+</p>
+<pre>send {num_4} // 4
+send { num_4 } // [4]
+</pre>
+<p><b>2.19</b>
+<br />Слегка ускорил 'send'.
+<br />Поправил отправку функциональных клавиш в 'send'.
+</p><p><b>2.29</b>
+<br />Немного исправил команду 'send' в плане указания клавиш в скобках с пробелами. Теперь: 
+</p>
+<pre>send {num_4}   // 4
+send { num_4 } // 4
+</pre>
+<p>Однако, если больше одной пары скобок в строке, то:
+</p>
+<pre>send {num_4} { num_4 } // 4[4]
+</pre>
+<p><b>2.30</b>
+<br />Поправил команду 'send' при отправке последовательности символов. Приблизил к варианту 'send217'.
+</p><p><b>2.34</b>
+<br />Убрал вывод в лог отладочной информации командами "send".
+</p>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a  title="Служебная:Категории">Категория</a>: <ul><li><a  class="new" title="Категория:Клавиатура (страница не существует)">Клавиатура</a></li></ul>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=Send&amp;oldid=724">https://uopilot.uokit.com/wiki/index.php?title=Send&amp;oldid=724</a></div></body>
+</html>
+ 

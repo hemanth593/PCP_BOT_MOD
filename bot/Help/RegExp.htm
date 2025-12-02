@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>RegExp — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">RegExp</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p>Оператор поиска позиции подстроки в строке с помощью регулярного выражения.
+<br />Более подробное описание и простые примеры: <a href="https://uopilot.uokit.com/wiki/index.php?title=%D0%A0%D0%B5%D0%B3%D1%83%D0%BB%D1%8F%D1%80%D0%BD%D1%8B%D0%B5_%D0%B2%D1%8B%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D1%8F_(Regexp)" title="Регулярные выражения (Regexp)">Регулярные выражения (Regexp)</a>
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: Нет.
+<br />Работа со свернутым окном: Да.
+</p>
+<pre>regexp (&lt;#position&gt; &lt;$hitString&gt; &lt;$string&gt; &lt;$regexp&gt;)
+</pre>
+<p>Где:
+<br /><b>&lt;#position&gt;</b> - номер позиции первого символа совпавшего выражения. Если не найдено, то -1.
+<br /><b>&lt;$hitString&gt;</b> - совпавшее выражение. Если не найдено, то -1
+<br /><b>&lt;$string&gt;</b> - строка в которой происходит поиск. Может быть задана с помощью элементов массива.
+<br /><b>&lt;$regexp&gt;</b> - собственно сам регексп. Может быть задан с помощью элементов массива.
+Регэксп присваиваемый переменной рекомендуется заключать в кавычки "".
+</p>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>// Пример 1
+// Ищем число в строке, может быть целым и не целым
+set $regexp "[\d.,]+"    
+set $string У Васи зарплата: 50.432 рубля.
+set #n regexp (#position $hitstring $string $regexp)
+if #n = 1
+    msg $hitstring
+end_if
+end_script
+</pre>
+<pre>// Пример 2
+// Ищем число после слова 'сумма:', может быть целым и не целым
+set $regexp "(?&lt;=сумма:)\s*[\d.,]+"
+set $string Вы получили 540 рублей, общая сумма: 5032 рубля.
+set #n regexp (#position $hitstring $string $regexp)
+if #n = 1
+        // учтите, что пробелы перед числом тоже будут присутствовать в строке
+        // если после слова 'сумма:' будет пробел, то переменная '$hitstring' будет содержать ' 5032' 
+        // в избежание ошибок рекомендуется обрезать пробелы с помощью trim
+    set $a trim($hitstring)
+    msg $a  
+end_if
+end_script
+</pre>
+<pre>// Пример 3
+// Ищем число после слова 'сумма:', может быть целым и не целым
+// В отличии от примера 2, в котором после слова 'сумма:' может быть любое количество пробелов и требуется обрезать их,
+// то в этом, пробел может отсутствовать или быть только 1, но при этом не требуется использовать trim.     
+set $regexp "(?&lt;=сумма:|сумма:\s)[\d.,]+"
+set $string Вы получили 540 рублей, общая сумма: 5032 рубля.
+set #n regexp (#position $hitstring $string $regexp)
+if #n = 1
+    msg $hitstring  
+end_if
+end_script
+</pre>
+<pre>// Пример 4
+// Ищем число, которое стоит перед словом 'золото'
+set $regexp "[\d.,]+(?=\s*золото)"            
+set $string Ваши ресурсы: 48 золото, 69 руда.
+set #n regexp (#position $hitstring $string $regexp)
+if #n = 1
+    msg $hitstring
+end_if
+end_script
+</pre>
+<pre>// Пример 5
+// Ищем номер телефона в массиве. Номер будет найден, если до него в тексте нет других чисел.
+set delimiter ' '      // установить разделитель пробел, нужно если массив не одномерный
+set %a [1] Адрес: г. Москва.
+set %a [2] Номер телефона: 8(495)123-45-67.
+set %a [3] Icq: 123456789.
+   // чтобы не проверять каждую строку отдельно собираем весь массив в 1 строку
+for #i 1 size(%a)
+    set $string $string %a [#i]
+end_for
+
+msg $string           // получившаяся строка
+set $regexp "([\d()-]\s*)+"        // номер телефона может состоять из цифр, круглых скобок, пробелов и тире
+set #n regexp (#position $hitstring $string $regexp)
+if #n = 1
+    msg $hitstring         
+end_if
+End_script
+</pre>
+<pre>// Пример 6
+// Ищем в массиве все номера телефонов в заданном формате. X(XXX)XXX-XX-XX или +XXXXXXXXXXXX или +X XXX-XX-XX.
+// Регэкспы для каждого формата отдельно:
+// \d\(\d{3}\)\d{3}\-\d{2}\-\d{2}   - соответствует X(XXX)XXX-XX-XX
+// \+\d{12}   - соответствует +XXXXXXXXXXXX
+// \+\d\s\d{3}\-\d{2}\-\d{2}   - соответствует +X XXX-XX-XX
+log mode compact
+
+set %a [1] Адрес: г. Москва.
+set %a [2] Номер телефона: 8(495)123-45-67
+set %a [3] Адрес: г. Омск.
+set %a [4] Номер телефона: +420921234567
+set %a [5] Адрес: г. Томск.
+set %a [6] Номер телефона: +7 123-45-67.
+
+for #i 1 size(%a)                  // перебираем все строки
+   set $regexp "\d\(\d{3}\)\d{3}\-\d{2}\-\d{2}|\+\d{12}|\+\d\s\d{3}\-\d{2}\-\d{2}"
+   set #n regexp (#position $hitstring %a[#i] $regexp)
+   if #n = 1
+       log $hitstring
+   end_if
+end_for
+End_script
+</pre>
+<pre>// Пример 7
+// (?x) - позволяет игнорировать пробелы в регэкспе. Становится более читаемым.  
+set $regexp "(?x) \w+   \@   \w+   \.   \w{2,3}"
+set $string Почта: Google@gmail.com
+set #n regexp (#position $hitstring $string $regexp)
+if #n = 1
+    msg $hitstring
+end_if
+End_script
+</pre>
+<pre>// Пример 8
+// Найти все числа в строке.
+log mode compact
+set $regexp "(?x) \b  \d+[,.]??\d+  \b   |  \b\d\b"
+set $string USD 64,70   EUR 73,19   НЕФТЬ 50,48
+set #n regexp (#position $hitstring $string $regexp)
+while 1 = 1
+    if #n = 1
+        log $hitstring                        // вывод результата в лог
+        set #z #position + size($hitstring)
+        set $string delete($string 1 #z)
+        set #n regexp (#position $hitstring $string $regexp)
+    else
+        break
+    end_if
+end_while
+End_script
+</pre>
+<pre>// Пример 9
+// Найти текст между словами
+set %a [1] Z:\__РАБОТА!!!!\ТЕКУЩАЯ РАБОТА\ТАНЯ\Клиент\АСК\для размышлений.pdf       // строка, в которой ищем текст
+
+log mode compact
+set $regexp "(?&lt;=РАБОТА\\).+(?=\\Клиент)"        // искать текст между словами РАБОТА\ \Клиент
+set #n regexp (#position $hitstring %a [1] $regexp)   
+if #n &gt; 0
+    log $hitstring
+end_if
+End_script
+</pre>
+<pre>// Пример 10
+// Обратные ссылки
+// Найти в строке пару чисел
+set $regexp "(\d)\1"    
+set $string 14325778690
+set #n regexp (#position $hitstring $string $regexp)
+if #n = 1
+    log Найдено $hitstring в позиции #position
+end_if
+end_script
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=PosEx" title="PosEx">PosEx</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Get_number" title="Get number">Get number</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Get_word" title="Get word">Get word</a>
+</p>
+<h2><span id="История_развития"></span><span class="mw-headline" id=".D0.98.D1.81.D1.82.D0.BE.D1.80.D0.B8.D1.8F_.D1.80.D0.B0.D0.B7.D0.B2.D0.B8.D1.82.D0.B8.D1.8F">История развития</span></h2>
+<p><b>2.33</b>
+<br />Добавил регекспы, точнее PerlRegEx врапер для опенсорсной PCRE. Функция 'regexp (#position $hitString $string $regexp)' возвращает:
+</p>
+<pre>'1' - было совпадение
+'0' - совпадения небыло
+'-1' - строка задана с помощью массива, но не распознана
+Где:
+    #position - номер позиции первого символа совпавшего выражения. Если не найдено, то -1.
+    $hitString - совпавшее выражение. Если не найдено, то -1
+    $string - строка в которой происходит поиск. Может быть задана с помощью элементов массива.
+    $regexp - собственно сам регексп. Может быть задан с помощью элементов массива.
+</pre>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a  title="Служебная:Категории">Категория</a>: <ul><li><a  class="new" title="Категория:Текст (страница не существует)">Текст</a></li></ul>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=RegExp&amp;oldid=707">https://uopilot.uokit.com/wiki/index.php?title=RegExp&amp;oldid=707</a></div></body>
+</html>
+ 

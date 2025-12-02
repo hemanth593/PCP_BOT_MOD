@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Call — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">Call</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p>Вызывает процедуру созданную по средствам <a href="https://uopilot.uokit.com/wiki/index.php?title=Proc" title="Proc">proc</a>.
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: опциональна.
+<br />Работа со свернутым окном: да.
+<br />Вызов процедуры: call &lt;имя_процедуры&gt; &lt;передаваемый параметр1&gt; &lt;передаваемый параметр2&gt;...&lt;передаваемый параметрN&gt;
+<br />Тело процедуры: proc &lt;имя процедуры&gt; &lt;переменная для приема параметра1&gt;&lt;переменная для приема параметра2&gt;...&lt;переменная для приема параметраN&gt;
+&lt;ваш код&gt;
+end_proc
+</p>
+<pre>set #a 1
+set #b 2
+call test #a #b
+
+proc test #a1 #b1
+    msg #a1 #b1
+end_proc
+</pre>
+<p>В этом коде переменные #a и #b будут переданы в процедуру под именами #a1 и #b1. Исходные переменные для процедуры будут невидимы, т.к. она по сути является параллельным независимым скриптом. Для обращения к другим скриптам внутри процедуры и возвращения результата необходимо использовать ссылки на параллельные скрипты:
+</p>
+<pre>&lt;имя_переменной<b>.</b>номер_вкладки&gt;
+#a.3 - сслыка на переменную #a в третьей вкладки скрипта.
+</pre>
+<p>Для возвращения результата используйте передачу переменной <a href="https://uopilot.uokit.com/wiki/index.php?title=Current_script" title="Current script">current_script</a>.
+</p>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>// Пример 1
+set #a 10
+set #b 13
+call plus #a #b       //передаём в процедуру 2 переменные
+msg $plus             //вернули в скрипт результат из процедуры, обратите внимание переменная имеет тоже имя что процедура
+End_script
+
+proc plus #x #y       
+   //в процедуре переданные переменные будут с именами #x #y, хотя можно и также было назвать #a #b
+    set #z #x + #y    //сложим эти переменные
+    set $result #z    //присвоим зарезервированной переменной '$result' результат сложения, чтобы вернуть его в скрипт   
+end_proc
+</pre>
+<pre>// Пример 2
+// Проверяем цвет в точке и время ожидания, если цвет будет отсутствовать 5 секунд будет сообщение об этом
+call proverka 351 278 14320907 5000     //передаём в процедуру X Y Color Timeout
+if $proverka = 1                        //проверяем вышло ли время для ожидания цвета или нет
+    msg Время вышло, прошло timer мсек        //что делать если время вышло
+    End_script
+end_if
+msg Цвет найден, прошло timer мсек
+End_script
+
+proc proverka #x #y #c #time
+while_not #x #y #c         //проверяем пока не найдётся нужный цвет
+    if timer &gt; #time       //проверяем не вышло ли время
+        set $result 1       //если вышло назначаем переменную
+        break               //выходим из while и процедуры
+    end_if
+end_while
+end_proc
+</pre>
+<pre>// Пример 3
+  set #cfound 0 // переменная для получение результатов поиска
+  
+  call checkcolor 969, 64 1251183 
+  if #cfound = 1   
+     msg Цвет найден!
+  else
+     msg Цвет не обнаружен!
+  end_if
+  end_script
+  
+  // Проверяет в текущем рабочем окне пиксель с координатами #x, #y на соответствие цвету #c.
+  // Результат: глобальная переменная скрипта #cfound=1, если цвет найден; #cfound=0, если не найден 
+  proc checkcolor #x #y #c
+     set #cs current_script
+     set #a findcolor (#x, #y #x, #y 1 1 #c %arr workwindow.#cs )
+     if #a &gt; 0
+       set #cfound.#cs 1
+     else
+       set #cfound.#cs 0
+     end_if	  
+  end_proc
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=Proc" title="Proc">Proc</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Gosub" title="Gosub">Gosub</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Goto" title="Goto">Goto</a>
+</p>
+<h2><span id="История_развития"></span><span class="mw-headline" id=".D0.98.D1.81.D1.82.D0.BE.D1.80.D0.B8.D1.8F_.D1.80.D0.B0.D0.B7.D0.B2.D0.B8.D1.82.D0.B8.D1.8F">История развития</span></h2>
+<p><b>1.03 beta 4</b>
+<br />Добавил команды для работы с процедурами
+call &lt;имя&gt; - вызов процедуры. Процедура с указанным именем ищется сначала в текущем скрипте, а затем, если не найдена, в "файле процедур" - скрипт с номером 99. загрузить туда что-либо можно с помощью соответствующего пункта меню. Поддерживается вложенный вызов процедур.
+proc &lt;имя&gt; - начало процедуры. Процедуры можно располагать в любом месте программы. При обнаружении начала процедуры, автоматически ищется ее конец, и выполнение продолжается со следующей строки. Вложенное описание не поддерживается.
+end_proc - конец процедуры
+</p>
+<pre>proc saying_message
+    say test passed
+end_proc
+call saying_message
+end_script
+</pre>
+<p>Процесс выполнения процедуры не отображается, параметры пока не передаются.
+</p><p><b>2.15</b>
+<br />Добавил возможность указывать параметры при вызове процедур. Приём/передача массивов пока не поддерживается:
+</p>
+<pre>call test #var1 $var2 "any text" word #var3 
+proc test #var4 $var5 $var6     $var7 $var8.
+</pre>
+<p><b>2.20</b>
+<br />Исправил вложенный вызов процедур, расположенных в теле родительского скрипта:
+</p>
+<pre>set logging open 0 0 440 700
+set linedelay 0
+set #a 0
+call proc
+proc proc
+    wait 1
+    set logging on
+    if #a.0 &lt; 20
+        set #a.0 #a.0 + 1
+        call proc
+    end_if
+end_proc
+</pre>
+<p><b>2.28</b>
+<br />Добавил возможность передавать в подпрограммы массивы. Следите за соответствием типов переменных
+передаем массив по ссылке. т.е. изменение его в процедуре может привести к изменению в родительском скрипте.
+Но если в процедуре изменится его размерность, то теоретически после этого изменения произойдет передача по значению (копирование).
+</p>
+<pre>set %var [1 1] abc
+set %var [1 2] 123
+set #e 1
+set delimiter '_'
+call test2 %var [1 2]  %var [#e]  %var  %var.5 
+end_script
+proc test2 #v1  $v2  %v3  %v4
+set delimiter '^'
+set logging Dump:  #v1  $v2  %v3 [1]  %v4 [1]
+   // Dump:  123  abc_123  abc^123  abc^123
+end_proc
+</pre>
+<p>Добавил возврат строкового значения из подпрограммы, с помощью зарезервированной переменной '$result'. При выходе из подпрограммы по ключевому слову 'end_proc', значение переменной '$result' присваивается строковой переменной с именем подпрограммы.
+</p>
+<pre>call test
+msg $test
+end_script
+proc test
+set $result Test Passed
+end_proc
+</pre>
+<p><b>2.33</b>
+<br />Исправил передачу в подпрограммы переменных, указанных после массива 'call test %a #l'
+</p><p><b>2.41</b>
+<br />Исправил ошибку "EConvertError '^xx'", где "хх" номер скрипта, иногда возникающую при выполнении процедур.
+<br />Исправил присваивание 'workwindow' в процедурах. Присваивание срабатывало только на вызывающий скрипт.
+</p>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a  title="Служебная:Категории">Категория</a>: <ul><li><a  class="new" title="Категория:Подпрограммы (страница не существует)">Подпрограммы</a></li></ul>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=Call&amp;oldid=482">https://uopilot.uokit.com/wiki/index.php?title=Call&amp;oldid=482</a></div></body>
+</html>
+ 

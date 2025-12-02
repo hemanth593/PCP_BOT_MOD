@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>For (Lua) — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">For (Lua)</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p><b>for</b> - выполняет цикл несколько раз в соответствии со значением переменной управления циклом. Эта переменная может увеличиваться или уменьшаться при выполнении цикла. Циклы могут быть бесконечными или могут иметь конечное значение для переменной управления. Код будет выполняться до тех пор, пока переменная управления удовлетворяет аргументам команды. Если переменная управления вышла за предел конечного значения, выполняется выход из цикла. Переменная управления является локальной, т. е. существует в пределах цикла.
+<br />Также for используется для обхода элементов массива/таблицы.
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: нет.
+<br />Работа со свернутым окном: да.
+<br /><i>1-й тип (числовой цикл):</i>
+</p>
+<pre>for i = iMin, iMax [, &lt;шаг&gt;] do
+  [строки_скрипта]
+  [break]
+  [строки_скрипта]
+end
+</pre>
+<p>Где:
+<br /><b>i</b> - числовая переменная-счётчик
+<br /><b>iMin</b> - начальное значение отсчета.
+<br /><b>iMax</b> - конечное значение отсчета (включительно). 
+<br /><b>шаг</b> - шаг цикла (значение, которое при каждом цикле прибавляется к i). Может быть положительным или отрицательным.  Необязателен. Если не указан, то равен 1.
+<br /><b>iMin, iMax, шаг</b> - вычисляются только один раз, перед выполнением цикла.
+<br /><b>break</b> - команда прерывания цикла. Передаёт управление на строку, находящуюся сразу за end.
+<br />Допустимо использование дробных чисел. Разделитель точка.
+<br /><br /><i>2-й тип (обход элементов массива/таблицы):</i>
+<br />Условно можно разделить на 2 вида: pairs и ipairs.
+<br /><b>ipairs</b> - цикл перебирает все элементы массива/таблицы с целочисленными ключами в порядке возрастания начиная с единицы. Если значение элемента массива/таблицы nil, то  выполняется выход из цикла.
+<br /><b>pairs</b> - используется для обхода вообще всех элементов массива/таблицы. Порядок обхода элементов непредсказуем, даже при использовании целочисленных ключей.
+</p>
+<pre>for i, value in ipairs(Array) do
+    [строки_скрипта]
+    [break]
+    [строки_скрипта]
+end
+</pre>
+<p>Где:
+<br /><b>i</b> - переменная, в которую записывается индекс элемента массива/таблицы.
+<br /><b>value</b> - переменная, в которую записывается значение элемента массива/таблицы.
+<br /><b>Array</b> - массив или таблица.
+</p>
+<pre>for i, value in pairs(Array) do
+    [строки_скрипта]
+    [break]
+    [строки_скрипта]
+end
+</pre>
+<p>Где:
+<br /><b>i</b> - переменная, в которую записывается ключ элемента массива/таблицы.
+<br /><b>value</b> - переменная, в которую записывается значение элемента массива/таблицы.
+<br /><b>Array</b> - массив или таблица.
+</p>
+<h2><span id="Примеры_простых_циклов"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B_.D0.BF.D1.80.D0.BE.D1.81.D1.82.D1.8B.D1.85_.D1.86.D0.B8.D0.BA.D0.BB.D0.BE.D0.B2">Примеры простых циклов</span></h2>
+<pre>--lua
+for i = 1, 3 do          -- шаг не указан, по умолчанию равен 1
+  msg (i)
+end
+-- увидим: 1 2 3
+</pre>
+<pre>--lua
+for i = 4, 8, 2 do       -- шаг 2
+  msg ("Миша съел " .. i .. " яблок(а)")
+end
+-- увидим: 4 6 8
+</pre>
+<pre>--lua
+-- назад, с шагом -1
+local a = 4
+local b = 2
+local s = -1
+for j = a, b, s do
+   log ("Считаем назад: " .. j)
+end
+log ("Закончили счёт")
+-- увидим: 4 3 2 закончили
+</pre>
+<pre>--lua
+-- вперед, с шагом 1, используем break
+for k = 2, 6 do
+  log ("Считаем вперед: " .. k .. "A")
+  if k == 4 then   -- если переменная 'k' равна 4
+      break   -- прервать цикл
+  end   
+  log ("Считаем вперед: " .. k .. "Б")
+end
+log ("Закончили счёт")
+-- увидим: 2А 2Б 3А 3Б 4А Закончили
+</pre>
+<pre>--lua
+-- цикл с нецелыми числами.
+for i = 0.1, 0.7, 0.15 do
+   log (i)
+end
+</pre>
+<h2><span id="Примеры_циклов_обхода_массивов"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B_.D1.86.D0.B8.D0.BA.D0.BB.D0.BE.D0.B2_.D0.BE.D0.B1.D1.85.D0.BE.D0.B4.D0.B0_.D0.BC.D0.B0.D1.81.D1.81.D0.B8.D0.B2.D0.BE.D0.B2">Примеры циклов обхода массивов</span></h2>
+<pre>--lua
+local arr = {40, 50, 20, 10}  -- массив arr, элементы: [1] = 40, [2] = 50, [3] = 20, [4] = 10
+log ("clear")           -- очистить лог  
+log ("mode compact")    -- компактный режим
+for i = 1, #arr do      -- #arr - размер массива arr
+    log (i, arr[i])
+end 
+log()
+-- или так
+for i, value in ipairs(arr) do
+    log (i, value)
+end 
+-- Когда в массиве отсутствуют пустые элементы (nil) между #arr и ipairs разницы нет.
+</pre>
+<pre>--lua 
+local arr = {[1] = 40, [2] = 50, [4] = 10}  -- массив arr, элементы: [1] = 40, [2] = 50, [3] = nil, [4] = 10, такая индексация не рекомендуется
+log ("clear")           -- очистить лог  
+log ("mode compact")    -- компактный режим
+for i = 1, #arr do     
+    log (i, arr[i])
+end 
+log()
+for i, value in ipairs(arr) do
+    log (i, value)
+end 
+-- А в этом примере разница заметна. 3й элемент пуст поэтому ipairs обошёл только элементы 1 и 2.
+</pre>
+<pre>--lua 
+local arr = {[1] = 40, [2] = 50, [4] = 10}  -- массив arr, элементы: [1] = 40, [2] = 50, [3] = nil, [4] = 10
+log ("clear")           -- очистить лог  
+log ("mode compact")    -- компактный режим
+for i, value in pairs(arr) do
+    log (i, value)
+end 
+-- pairs обходит все элементы массива, но не обязательно по порядку. 
+</pre>
+<h2><span id="Примеры_циклов_обхода_таблиц"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B_.D1.86.D0.B8.D0.BA.D0.BB.D0.BE.D0.B2_.D0.BE.D0.B1.D1.85.D0.BE.D0.B4.D0.B0_.D1.82.D0.B0.D0.B1.D0.BB.D0.B8.D1.86">Примеры циклов обхода таблиц</span></h2>
+<pre>--lua
+local arr = {milk = "молоко", [1] = 50, [2] = 70, apple = "яблоко", [3] = 88, [4] = 190} 
+log ("clear")
+log ("mode compact")
+for i, value in ipairs(arr) do
+    log (i .. " - это индекс,",  value .. " - это значение элемента")
+end
+-- ipairs обошёл только целочисленные ключи, т. е. 1, 2, 3, 4, apple и milk были пропущёны.
+</pre>
+<pre>--lua
+local arr = {milk = "молоко", [1] = 50, [2] = 70, apple = "яблоко", [3] = 88, [4] = 190} 
+log ("clear")
+log ("mode compact")
+for i, value in pairs(arr) do
+    log (i .. " - это индекс,",  value .. " - это значение элемента")
+end
+-- pairs обходит все элементы массива, но не обязательно по порядку. 
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=While_(Lua)" title="While (Lua)">While (Lua)</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Repeat_(Lua)" title="Repeat (Lua)">Repeat (Lua)</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Break_(Lua)" title="Break (Lua)">Break (Lua)</a>
+</p>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=For_(Lua)&amp;oldid=564">https://uopilot.uokit.com/wiki/index.php?title=For_(Lua)&amp;oldid=564</a></div></body>
+</html>
+ 

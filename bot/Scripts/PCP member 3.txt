@@ -1,0 +1,24 @@
+-- lua
+log 'clear' log 'mode compact'
+local bot = require("Bot/bot")
+local PCP = require("PCP/PCP")
+--Set your keys
+attackskills = "1" -- for wizz donot add aoe skills here  for tamer add aoe skills too
+aoe = "1"       --For Fairy put same as primary skill / Rest of the chars put instant and aoe slot number
+buff1 = "F7"
+buff2 = "F8"      -- Any Buff if required
+Petfood = 0
+pet = 9
+teamcount = 5
+--presets
+CHAR_NAME = "<YOUR CHARACTER NAME>"
+ADDTEAM = "FOE"
+Leader = "NO"
+LeaderName= "<YOUR TEAM LEADER NAME>"
+team= "3"
+--Script
+bot.verifyclient()
+PCP.test()
+while true do
+    PCP.start()
+end

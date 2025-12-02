@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Sendex — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">Sendex</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p><b>Sendex</b> - посылает практически все комбинации клавиш. Клавиши Ctrl, Alt, Shift кодируются символами ^, @ и ~ соответственно. Все функциональные клавиши должны быть заключены в фигурные скобки: {Enter}. В одной команде может быть целое предложение из клавиш
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: нет.
+<br />Работа со свернутым окном: нет.
+</p>
+<pre>sendex &lt;клавиша&gt;
+</pre>
+<p>где:
+<br /><b>&lt;клавиша&gt;</b> - клавиша или набор клавиш с которыми производится действие. Если клавиша не односимвольная (Tab, Enter, F5 и т.д.), то ее необходимо заключать в фигурные скобки: {Tab}.
+<br /><br />SendExDelay - устанавливает задержку между нажатиями sendex. Значение изменяется только для текущего скрипта.
+</p>
+<pre>set SendExDelay 10     //установить задержку между нажатиями в 10 мсек.
+</pre>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>// Пример 1
+sendex ~{}         // зажать клавишу Shift ..
+kleft 40, 30 abs   // и кликнуть в абсолютных (экранных координатах) 40, 30
+sendex             // отпустить Shift (точнее все клавиши-модификаторы)
+End_script
+</pre>
+<pre>// Пример 2
+sendex ~google is ~c~o~o~l // напечатать в активном окне в позиции курсора фразу Google is COOL (если включена английская раскладка клавиатуры)
+End_script
+</pre>
+<pre>// Пример 3
+// печатаем одной строкой текста: Вася.Пупкин@gmail.com
+set $var setlayout (0419)  // включили русскую раскладку
+sendex Dfcz/Gegrby         // Вася.Пупкин (смотрим на клавиатуру)
+set $var setlayout (0409)  // включили английскую раскладку
+sendex ~2gmail.com         // @gmail.com
+End_script
+</pre>
+<pre>// Пример 4
+set SendExDelay 100    //установить задержку между нажатиями в 100 мсек
+sendex qwerty
+End_script
+</pre>
+<pre>// Пример 5
+ set $r раз два три    // записали в переменную фразу
+ set clipboard $r      // записали в буфер обмена значение переменной $r
+sendex ^v              //нажать Ctrl + V
+End_script
+</pre>
+<pre>// Пример 6
+sendex @{F4}           //нажать Alt + F4 (закроет активное окно)
+End_script
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=Send" title="Send">Send</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Send217" title="Send217">Send217</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Send_down" title="Send down">Send_down</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Sendex_down" title="Sendex down">Sendex_down</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Post" title="Post">Post</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Say" title="Say">Say</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Setlayout" title="Setlayout">Setlayout</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Getlayout" title="Getlayout">Getlayout</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=SetSelectedText" title="SetSelectedText">SetSelectedText</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Set_clipboard" title="Set clipboard">Set clipboard</a>
+</p>
+<h2><span id="История_развития"></span><span class="mw-headline" id=".D0.98.D1.81.D1.82.D0.BE.D1.80.D0.B8.D1.8F_.D1.80.D0.B0.D0.B7.D0.B2.D0.B8.D1.82.D0.B8.D1.8F">История развития</span></h2>
+<p><b>0.98 beta</b>
+<br />Добавил команду 'sendex'. Посылает практически все комбинации клавиш. Клавиши Ctrl, Alt, Shift кодируются символами ^, @ и ~ соответственно. Все функциональные клавиши должны быть заключены в фигурные скобки: {Enter}. В одной команде может быть целое предложение из клавиш:
+</p>
+<pre>sendex ~closing ~application @{f4}
+</pre>
+<p>Имеется следующее свойство: приложение примет только те клавиши (символьные), которые соответствуют установленной в нем раскладке клавиатуры. Во время выполнения команды, на приложение направляется фокус, и блокируется система. При некоторых обстоятельствах, следующая команда выполняется до завершения текущей.
+</p><p><b>2.11</b>
+<br />Отныне, при остановке скрипта, sendex прекращает посылку клавиш.
+</p><p><b>2.12</b>
+<br />Уменьшил задержку в sendex почти в два раза.
+</p><p><b>2.14</b>
+<br />Sendex больше не активирует выбранное приложение. Для активации следует использовать 'ShowWindow' без параметров.
+<br />Добавил возможность изменять задержку между символами в команде 'sendex' на вкладке 'Ещё'.
+</p><p><b>2.19</b>
+<br />При посылке 'sendex' без параметров отжимаются все модификаторы.
+</p><p><b>2.31</b>
+<br />Исправил лишнее активирование окон пилота при выполнении скриптов. Критично для команд типа 'sendex', 'kleft'.
+</p><p><b>2.32</b>
+<br />Починил комбинации с шифтом, типа 'sendex ~{end}'.
+<br />Поправил отправку клавиш в конструкциях типа 
+</p>
+<pre>set $fishing 10
+sendex {F$fishing}
+</pre>
+<p>Подправил отправку русского текста командой 'sendex'. При активной английской раскладке в пилоте, ничего не печаталось.
+</p><p><b>2.36</b>
+<br />Добавил несколько зарезервированных переменных: 'SendExDelay', 'EmptyLineDelay', 'MouseClickDelay'.
+</p><p><b>2.36.1</b>
+<br />Добавил команды зажатия клавиш 'sendex_down &lt;клавиша&gt;', 'sendex_up &lt;клавиша&gt;'.
+</p><p><b>2.36.2</b>
+<br />Исправил несколько зарезервированных переменных: 'SendExDelay', 'EmptyLineDelay', 'MouseClickDelay'. Значения изменяются только для текущего скрипта.
+</p>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a  title="Служебная:Категории">Категория</a>: <ul><li><a  class="new" title="Категория:Клавиатура (страница не существует)">Клавиатура</a></li></ul>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=Sendex&amp;oldid=732">https://uopilot.uokit.com/wiki/index.php?title=Sendex&amp;oldid=732</a></div></body>
+</html>
+ 

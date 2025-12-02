@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Get color — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">Get color</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p>Определяет цвет в заданных координатах.
+<br />Может находит цвет в перекрытых окнах.
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: опционально.
+<br />Работа перекрытым окном: опционально.
+<br />Работа со свернутым окном: нет.
+</p>
+<pre>get color &lt;#color&gt; &lt;#x&gt; &lt;#y&gt; [handle] [abs]
+</pre>
+<p><b>&lt;#color&gt;</b> - переменная, в которую запишется полученный цвет
+<br /><b>&lt;#x&gt;</b> - координата X
+<br /><b>&lt;#y&gt;</b> - координата Y
+<br /><b>[handle]</b> - хендл окна. Если указать, то цвет будет определяться и в перекрытом (не свёрнутом) окне. Как правило, требуется указывать родительское окно. Если возвращается 0 или 0x878787, скорее всего, указано не то окно. 
+<br /><b>[abs]</b> - использовать абсолютные координаты.
+<br />При указании сразу обоих необязательных параметров 'handle' и 'abs', точка с координатами '#x, #y' должна попадать в заданное окно, иначе цвет не будет определен и команда вернет ошибку.
+</p>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>// Пример 1
+get color #color 100 150   // получаем цвет в координатах 100 150
+msg #color
+</pre>
+<pre>// Пример 2
+get color #color 100 150 abs  // получаем цвет в абсолютных координатах 100 150
+msg #color
+</pre>
+<p><b>Примеры поиска цвета в перекрытом(не свёрнутом) окне:</b> 
+<br />Привязка к окну обязательна. Aero (темы Windows 7) должен быть включен. Если был установлен Астер, то он должен быть отключен, а система перезагружена. 
+<br />Окно может быть перекрыто полностью, частично или вообще не перекрыто. Может находиться за пределами экрана. В Windows 10 работает не во всех приложениях, может потребоваться установка Aero Glass.
+<br />Учтите, что цвет может определяться со смещением, т. е. не в тех координатах. Если возвращает 0, скорее всего нужно указать родительское окно (обычно это заголовок или рамка).
+<br />Иногда, к проверяемым координатам нужно прибавлять размеры рамки окна.
+<br />Иногда, к проверяемым координатам нужно прибавлять смещение между родительским и дочерним окном. Узнать можно с помощью скрипта: <a href="https://uopilot.uokit.com/wiki/index.php?title=%D0%A1%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D0%B5_%D0%BC%D0%B5%D0%B6%D0%B4%D1%83_%D0%BE%D0%BA%D0%BD%D0%B0%D0%BC%D0%B8" title="Смещение между окнами">Смещение между окнами</a>. 
+<br />Вместо get color можно использовать <a href="https://uopilot.uokit.com/wiki/index.php?title=Findcolor" title="Findcolor">Findcolor</a>. 
+</p>
+<pre>// Пример 3
+get color #color 100 150 workwindow    // получаем цвет в координатах 100 150, окно может быть перекрыто
+msg #color
+</pre>
+<pre>// Пример 4
+set #handle FindWindow (Lineage 2)     // находим окно Lineage 2
+set #xDelta 8                          // размер рамки по X
+set #yDelta 30                         // размер рамки по Y
+init_arr %a (1) 157 41 2897277         // координаты и цвет (элементы %a [1 1] %a [1 2] %a [1 3])
+set #x %a [1 1] + #xDelta              // прибавляем к координате X размер рамки по X
+set #y %a [1 2] + #yDelta              // прибавляем к координате Y размер рамки по Y
+ 
+:start
+get color #color #x #y #handle         // получаем цвет из координат 157 41, окно может быть перекрыто
+hint Полученный цвет: #color, искомый цвет %a [1 3]
+if #color = %a [1 3]                   // если цвет найден
+    log Цвет найден                
+    wait 100
+end_if
+goto start
+</pre>
+<pre>// Пример 5
+// Небеса: уникальная игра, открытая в браузере Opera
+set #handle FindWindow (Небеса: уникальная игра! - Игра — Opera)     // находим окно
+// смещение можно узнать скриптом: <a href="https://uopilot.uokit.com/wiki/index.php?title=%D0%A1%D0%BC%D0%B5%D1%89%D0%B5%D0%BD%D0%B8%D0%B5_%D0%BC%D0%B5%D0%B6%D0%B4%D1%83_%D0%BE%D0%BA%D0%BD%D0%B0%D0%BC%D0%B8" title="Смещение между окнами">Смещение между окнами</a>
+set #xDelta 8                          // смещение между окнами по X 
+set #yDelta 78                         // смещение между окнами по Y
+
+init_arr %a (1) 1026, 647 15990015     // координаты и цвет (элементы %a [1 1] %a [1 2] %a [1 3])
+set #x %a [1 1] + #xDelta              // прибавляем к координате X смещение по X
+set #y %a [1 2] + #yDelta              // прибавляем к координате Y смещение по Y
+
+:start
+get color #color #x #y #handle         // получаем цвет, окно может быть перекрыто
+hint Полученный цвет: #color, искомый цвет %a [1 3]
+if #color = %a [1 3]
+    log Цвет найден
+    wait 100
+end_if
+goto start
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=Color" title="Color">Color</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Findcolor" title="Findcolor">Findcolor</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Findimage" title="Findimage">Findimage</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=If" title="If">If</a>
+</p>
+<h2><span id="История_развития"></span><span class="mw-headline" id=".D0.98.D1.81.D1.82.D0.BE.D1.80.D0.B8.D1.8F_.D1.80.D0.B0.D0.B7.D0.B2.D0.B8.D1.82.D0.B8.D1.8F">История развития</span></h2>
+<p><b>2.00</b>
+<br />Добавил возможность занесения в переменную цвета точки, по заданным координатам на экране, с помощью ключевого слова Сolor в команде Get.
+</p>
+<pre>get color #color #x #y [abs]
+</pre>
+<p>При указании ключевого слова abs, координаты берутся относительно экрана, иначе относительно прикрепленного окна. Если цвет определить не удалось, то переменная будет содержать значение -1. Если переменная ранее не существовала, то она создается.
+</p><p><b>2.18</b>
+<br />Подправил 'Get Color' для работы с линейкой.
+</p><p><b>2.19</b>
+<br />Пока отключил альтернативный способ определения цвета в 'get color'.
+</p><p><b>2.23</b>
+<br />Починил конструкцию вида 'get color #c %ar[1 1] %ar[1 2]' сломанную в версии 2.20.
+<br />Повысил стабильность работы 'get color'
+</p><p><b>2.32</b>
+<br />Добавил в 'get color' возможность искать цвет в перекрытых окнах, при указании хэндла подопытного окна. Слегка изменился синтаксис 'get color #color #x #y [handle] [abs]'. При указании сразу обоих необязательных параметров 'handle' и 'abs', точка с координатами '#x, #y' должна попадать в заданное окно, иначе цвет не будет определен и команда вернет ошибку.
+</p>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a  title="Служебная:Категории">Категория</a>: <ul><li><a  class="new" title="Категория:Поиск изображений (страница не существует)">Поиск изображений</a></li></ul>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=Get_color&amp;oldid=569">https://uopilot.uokit.com/wiki/index.php?title=Get_color&amp;oldid=569</a></div></body>
+</html>
+ 

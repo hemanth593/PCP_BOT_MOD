@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>String.gsub (Lua) — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">String.gsub (Lua)</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p><b>string.gsub</b> - возвращает копию строки, в которой все вхождения 'шаблона поиска' заменяются на 'шаблон замены', который может быть строкой, таблицей или функцией. Также возвращает как второе значение – общее количество проведенных подстановок.
+<br />Если 'шаблон замены' строка, то используется ее значение для замены. Символ&#160;% работает как символ со специальным назначением: любая последовательность в 'шаблоне замены' в виде %n, где n от 1 до 9, заменяется на n-ную захваченную подстроку. Последовательность %0 заменяется на найденную подстроку.
+<br />Если 'шаблон замены' является таблицей, то она запрашивается для каждого сравнения, с использованием первого захваченного значения как ключ; если шаблон не содержит захватов, то используется результат простого сравнения как ключ.
+<br />Если 'шаблон замены' является функцией, то эта функция вызывается каждый раз, когда обнаруживается совпадение. В качестве параметров ей передаются все захваченные подстроки; если шаблон не содержит захватов, то передается результат сравнения как один параметр.
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: нет.
+<br />Работа со свернутым окном: да.
+<br />Параметры заключаются в скобки и разделяются запятыми.
+</p>
+<pre>string.gsub (&lt;s&gt;, &lt;шаблон поиска&gt;, &lt;шаблон замены&gt;, [n])
+</pre>
+<p>Или:
+</p>
+<pre>&lt;s&gt;:gsub(&lt;шаблон поиска&gt;, &lt;шаблон замены&gt;, [n])
+</pre>
+<p>Где:
+<br /><b>s</b> - строка.
+<br /><b>шаблон поиска</b> - что искать или регулярное выражение.
+<br /><b>шаблон замены</b> - на что заменить.
+<br /><b>n</b> - сколько максимум раз можно сделать замену.
+<br /><br />Поддерживаемые опции регулярных выражений:
+</p>
+<pre>.	-- Любой символ
+%a	-- Буква (только англ.!)
+%A	-- Любая буква (русская), символ, или цифра, кроме английской буквы 
+%c	-- Управляющий символ
+%d	-- Цифра
+%D	-- Любая буква, или символ, кроме цифры
+%l	-- Буква в нижней раскладке (только англ.!)
+%L	-- Любая буква, символ, или цифра, кроме английской буквы в нижней раскладке
+%p	-- Символ пунктуации
+%P	-- Любая буква, символ, или цифра, кроме символа пунктуации
+%s	-- Символ пробел
+%S	-- Любая буква, символ, или цифра, кроме символа пробела
+%u	-- Буква в верхней раскладке (только англ.!)
+%U	-- Любая буква, символ, или цифра, кроме английской буквы в верхней раскладке
+%w	-- Любая буква, или цифра (только англ.!)
+%W	-- Любой символ, или буква (русская), кроме английской буквы, или цифры
+%x	-- Шестнадцатеричное число
+%X	-- Любая буква, или символ,  кроме цифры, или английской буквы, используемой в записи шестнадцатеричного числа 
+%z	-- Строковые параметры, содержащие символы с кодом 0
+</pre>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>--lua
+log ("clear") log ("mode compact")    -- очистить лог, компактный режим
+local str1 = "hello world"          -- строка
+log (str1)
+local str2 = string.gsub(str1, "world", "user")    -- заменить 'world' на 'user'
+log (str2)
+</pre>
+<pre>--lua
+log ("clear") log ("mode compact")    -- очистить лог, компактный режим
+local str1 = "one, two, three, four, five"   -- строка
+log (str1)
+local str2 = string.gsub(str1, ",", " -")    -- заменить ',' на ' -'
+log (str2)
+</pre>
+<pre>--lua
+-- найти запятые, после которых нет пробела, и добавить пробел
+log ("clear") log ("mode compact")    -- очистить лог, компактный режим
+local str1 = "one, two,three, four,five"     -- строка
+log (str1)
+local str2 = string.gsub(str1, ",", ", ")    -- заменить ',' на ', '
+log (str2)
+</pre>
+<pre>--lua
+log ("clear") log ("mode compact")      -- очистить лог, компактный режим
+local str1 = "Координаты: X = 360, Y = 638"    -- строка
+log (str1)
+local str2 = str1:gsub("(%d+)([^%d]+)(%d+)", "%3%2%1")  -- поменять координаты: X на Y и Y на X
+log (str2)
+</pre>
+<pre>--lua
+log ("clear") log ("mode compact")    -- очистить лог, компактный режим
+local t = {green = "red", black = "blue"}
+local str1 = "green, black, black, green"      -- строка
+log (str1)
+local str2 = string.gsub(str1, "(%a+)", t)    -- заменить все слова 'green' на 'red' и 'black' на 'blue'
+log (str2)
+</pre>
+<pre>--lua
+-- найти все числа в строке и умножить их на 2
+log ("clear") log ("mode compact")    -- очистить лог, компактный режим
+local str1 = "green, 7, black, 12, green"      -- строка
+log (str1)
+local str2 = string.gsub(str1, "(%d+)", function(s) return s * 2 end)  -- функция вызывается каждый раз, когда обнаруживается совпадение
+log (str2)
+
+local str2, count = string.gsub(str1, "(%d+)", function(s) return s * 2 end)  -- в переменную count будет записано количество подстановок
+log(str2)
+log(count)
+</pre>
+<pre>--lua
+log ("clear") log ("mode compact")    -- очистить лог, компактный режим
+local str1 = "qwe1213rty"        -- строка
+log (str1)
+local str2 = string.gsub(str1, "%d", "")    -- удалить из строки все цифры
+log (str2)
+</pre>
+<pre>--lua
+log ("clear") log ("mode compact")    -- очистить лог, компактный режим
+local str1 = "qwe1213rty"        -- строка
+log (str1)
+local str2 = string.gsub(str1, "%D", "")    -- удалить из строки все кроме цифр
+log (str2)
+</pre>
+<pre>--lua
+log ("clear") log ("mode compact")    -- очистить лог, компактный режим
+local str1 = "1 2 3 4 5 6 7 8 9"   -- строка
+log (str1)
+local str2 = string.format("%s" .. string.gsub(str1, " ", ", ") .. "%s", "(", ")")   -- добавить запятые между числами и заключить всю строку в скобки
+log (str2)
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=Tonumber_(Lua)" title="Tonumber (Lua)">Tonumber (Lua)</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Tostring_(Lua)" title="Tostring (Lua)">Tostring (Lua)</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=String.find_(Lua)" title="String.find (Lua)">String.find (Lua)</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=String.match_(Lua)" title="String.match (Lua)">String.match (Lua)</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=String.gmatch_(Lua)" title="String.gmatch (Lua)">String.gmatch (Lua)</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=String.format_(Lua)" title="String.format (Lua)">String.format (Lua)</a>
+</p>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks catlinks-allhidden" data-mw="interface"></div>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=String.gsub_(Lua)&amp;oldid=762">https://uopilot.uokit.com/wiki/index.php?title=String.gsub_(Lua)&amp;oldid=762</a></div></body>
+</html>
+ 

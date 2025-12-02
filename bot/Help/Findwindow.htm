@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Findwindow — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">Findwindow</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p>Поиск хендла окна по его заголовку или PID.
+<br />Поиск производится среди окон верхнего уровня, т.е. функция не ведет поиск в дочерних окнах, таких как кнопка, поле ввода и т.д..
+<br />Для получения хендла дочернего окна используйте функцию <a href="https://uopilot.uokit.com/wiki/index.php?title=Getwindow" title="Getwindow">Getwindow</a>.
+<br />Подробнее про устройство системы окон Windows вы можете прочитать в <a href="https://uopilot.uokit.com/wiki/index.php?title=%D0%9E%D0%BA%D0%BE%D0%BD%D0%BD%D0%B0%D1%8F_%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0_Windows" title="Оконная система Windows">Оконная система Windows</a>.
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: нет.
+<br />Работа со свернутым окном: да.
+</p>
+<pre>FindWindow (&lt;заголовок окна | PID&gt;)
+</pre>
+<p><b>&lt;заголовок окна&gt;</b> - полное название окна либо его часть.
+<br /><b>&lt;PID&gt;</b> - номер идентификатора процесса.
+<br />Указывается только один из параметров: либо заголовок, либо PID, но не оба сразу.
+<br />Порядок поиска следующий:
+</p>
+<dl><dd>1. ищем указанную строку в качестве точного названия окон</dd>
+<dd>2. в качестве класса окон</dd>
+<dd>3. в начале названия окон</dd>
+<dd>4. в середине названий окон</dd>
+<dd>5. в качестве 'pid' окна</dd></dl>
+<p>Если в качестве приемника указана числовая переменная, то будет найдено последнее активное окно с заданным заголовком.
+</p>
+<pre>Set #a FindWindow (Lineage II)
+</pre>
+<p>Если в качестве приемника указан массив, то будут найдены все окна с заданным заголовком.
+</p>
+<pre>Set %a FindWindow (Lineage II)
+</pre>
+<p>При этом %a [1 1] - это будет хендл последнего активного окна, %a [2 1] - предпоследнего, %a [3 1] и т. д.
+Количество найденных окон можно узнать с помощью функции: size(%a).
+</p>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>// Пример 1
+set #handleWin findwindow (Lineage II)
+set workwindow #handleWin
+// UOPilot привяжется к последнему активному окну Lineage 2.
+</pre>
+<pre>// Пример 2
+// Если надо найти все окна с одинаковым заголовком. 
+// Для примера: запускаем несколько калькуляторов.
+set %handle findwindow ("Калькулятор")
+msg Найдено окон: size(%handle)    
+for #i 1 size(%handle)
+    msg %handle[#i 1]    //выводим в сообщение все хендлы поочереди
+end_for
+End_script
+</pre>
+<pre>// Пример 3
+// Нажать 1 во всех окнах Lineage2 
+set %handle FindWindow ("Lineage2")   // найти все окна с именем Lineage2
+log Найдено окон: size(%handle)
+  
+for #i 1 size(%handle)              // цикл
+    set workwindow %handle [#i 1]   // сделать окно рабочим
+    log Текущее рабочее окно: %handle [#i 1]
+    send 1                          // нажать 1
+end_for
+End_script
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=Getwindow" title="Getwindow">Getwindow</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=WindowFromCursor" title="WindowFromCursor">WindowFromCursor</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=WindowFromPoint" title="WindowFromPoint">WindowFromPoint</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Set_windowpos" title="Set windowpos">Set windowpos</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Workwindow" title="Workwindow">Workwindow </a>
+</p>
+<h2><span id="История_развития"></span><span class="mw-headline" id=".D0.98.D1.81.D1.82.D0.BE.D1.80.D0.B8.D1.8F_.D1.80.D0.B0.D0.B7.D0.B2.D0.B8.D1.82.D0.B8.D1.8F">История развития</span></h2>
+<p><b>2.14</b>
+<br />Добавил функцию:
+</p>
+<pre>'FindWindow (&lt;заголовок окна | PID&gt;)'
+</pre>
+<p>Возвращает хендл окна, необходимый предыдущей команде. Заголовок окна следует указывать полностью, с соблюдением регистра символов. Если нужное окно не найдено, то регистронезависимо ищем указанную строку в начале названия всех окон. Поиск в скрытых окнах зависит от состояния переключателя "Показывать все окна". если опять ничего не нашли, то считаем, что указан PID процесса и ищем первое попавшееся окно этого процесса.
+</p><p><b>2.20</b>
+<br />Добавил в 'findWindow' возможность искать по классу окна
+<br />Добавил в 'findWindow' возможность искать в середине названий всех окон. Порядок поиска следующий:
+</p>
+<dl><dd>1. ищем указанную строку в качестве точного названия окон</dd>
+<dd>2. в качестве класса окон</dd>
+<dd>3. в начале названия окон</dd>
+<dd>4. в середине названий окон</dd>
+<dd>5. в качестве 'pid' окна</dd></dl>
+<p>Добавил в 'findWindow' вывод в лог каким способом найдено окно.
+</p><p><b>2.21</b>
+<br />Отключил вывод в лог 'findWindow' каким способом найдено окно, до лучших времен.
+</p><p><b>2.30</b>
+<br />Функция 'findwindow', вызванная без параметров (но со скобками) вернет хэндл активного окна.
+<br />Добавил в 'findwindow' поиск по имени процесса.
+<br />Если в качестве приемника в команде 'findwindow' указан массив, то записываем в него хендлы и имена ВСЕХ окон, в заголовке которых содержится указанная строка, или процессов, полностью совпадающих с указанным. Регистрозависимо.
+</p>
+<pre>   set %arr FindWindow (World of Warcraft)
+</pre>
+<p><b>2.39</b>
+<br />Исправил функцию 'findwindow'. Ничего не находила при нажатых клавишах "Alt+Tab".
+<br />Исправил ошибку в команде 'set %arr findwindow (caption)', возникающую при наличии в найденных "caption" символов '|' и '/'.
+</p>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a  title="Служебная:Категории">Категория</a>: <ul><li><a  class="new" title="Категория:Окна (страница не существует)">Окна</a></li></ul>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=Findwindow&amp;oldid=558">https://uopilot.uokit.com/wiki/index.php?title=Findwindow&amp;oldid=558</a></div></body>
+</html>
+ 

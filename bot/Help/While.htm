@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>While — UoPilot</title>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="styles" />
+</head>
+<body>
+<h1 id="firstHeading" class="firstHeading" lang="ru">While</h1>
+	
+	<h2><span id="Описание"></span><span class="mw-headline" id=".D0.9E.D0.BF.D0.B8.D1.81.D0.B0.D0.BD.D0.B8.D0.B5">Описание</span></h2>
+<p>While - оператор цикла. Создает цикл, который выполняется до того момента, пока условие является истиной(либо ложью при while_not). Выполняет операцию сравнения, а так же проверку цвета пикселя и последнего сообщения от сервера (для ultima online).
+<br />Для отрицания сравнения используется while _not.
+<br />Для выхода из цикла используются операторы break и continue.
+<br />Для операций сравнения используются знаки операций: &gt;, &lt;, =, &lt;=, &gt;=,&#160;!= идентично &lt;&gt;. Так же используются логические операторы or, and, xor:
+</p>
+<dl><dd>or - логическое ИЛИ. Или один или другой или оба.</dd>
+<dd>and - логическое И. И один и другой.</dd>
+<dd>xor - строгое логическое ИЛИ. Или один или другой, но не оба.</dd></dl>
+<p>Для указания приоритета нескольких операций используются круглые скобки: (, ).
+<br />В конце операции необходимо поставить end_while для корректного выполнения сценария.
+</p>
+<h2><span id="Синтаксис"></span><span class="mw-headline" id=".D0.A1.D0.B8.D0.BD.D1.82.D0.B0.D0.BA.D1.81.D0.B8.D1.81">Синтаксис</span></h2>
+<p>Привязка к окну: опционально.
+<br />Работа со свернутым окном: частично.
+</p>
+<h2><span id="Примеры"></span><span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80.D1.8B">Примеры</span></h2>
+<pre>// Пример 1
+set #i 2
+while #i&#160;!= 1
+    set #i #i * 2
+    msg #i
+end_while
+Результатом работы является умножение значения переменной #i на два, каждый раз, до того момента,
+пока значение переменной #i не  станет равной единице, т.е. бесконечно.
+</pre>
+<pre>// Пример 2. Бесконечный цикл
+ // Здесь сделаем подготовку
+set #счетчик 1
+msg На счетчике число: #счетчик , будем увеличивать...
+// А теперь зацикленный кусок скрипта
+while 1 = 1 // условие всегда будет выполняться, а значит цикл - бесконечный
+  set #счетчик #счетчик + 1 // увеличим значение на 1
+  msg Теперь на счётчике число: #счетчик 
+end_while
+</pre>
+<pre>// Пример 3
+while 329 289 14386954        // цикл будет выполняться пока присутствует цвет
+    send {F1}                 // нажать F1
+    wait 500                  // ждать 0,5 секунды
+end_while
+End_script
+</pre>
+<pre>// Пример 4
+while_not 329 289 14386954    // ждать пока не появится указанный цвет 
+    wait 10
+end_while
+log Цвет найден
+End_script
+</pre>
+<pre>// Пример 5
+while 329, 289 14386954 and 517, 834 8582073    // цикл будет выполняться пока присутствуют оба цвета
+    // нужные действия
+end_while
+End_script
+</pre>
+<pre>// Пример 6
+while 329, 289 14386954 or 517, 834 8582073    // цикл будет выполняться пока присутствует 1 из цветов или оба
+    // нужные действия
+end_while
+End_script
+</pre>
+<pre>// Пример 7
+while 329, 289 14386954 xor 517, 834 8582073    // цикл будет выполняться пока присутствует 1 из цветов, но не оба
+    // нужные действия
+end_while
+End_script
+</pre>
+<pre>// Пример 8
+while_not 329, 289 14386954 and 517, 834 8582073    // цикл будет выполняться пока не появятся оба цвета
+    wait 20
+end_while
+End_script
+</pre>
+<pre>// Пример 9
+while_not 329, 289 14386954 or 517, 834 8582073    // цикл будет выполняться пока не появится один из цветов или оба
+    wait 20
+end_while
+End_script
+</pre>
+<pre>// Пример 10
+// Выход из цикла через break
+while 1 = 1                            // условие всегда будет выполняться, а значит цикл - бесконечный   
+    set #счетчик #счетчик + 1      // увеличим значение на 1
+    msg Теперь на счётчике число: #счетчик 
+    if #счетчик = 3                    //если переменная '#счетчик' = 3
+        break                          //выходим из цикла
+    end_if
+end_while
+msg Вышли из while
+End_script
+</pre>
+<h2><span id="Смотрите_также"></span><span class="mw-headline" id=".D0.A1.D0.BC.D0.BE.D1.82.D1.80.D0.B8.D1.82.D0.B5_.D1.82.D0.B0.D0.BA.D0.B6.D0.B5">Смотрите также</span></h2>
+<p><a href="https://uopilot.uokit.com/wiki/index.php?title=For" title="For">For</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Repeat" title="Repeat">Repeat</a>
+<br /><a href="https://uopilot.uokit.com/wiki/index.php?title=Break" title="Break">Break</a>
+</p>
+<h2><span id="История_развития"></span><span class="mw-headline" id=".D0.98.D1.81.D1.82.D0.BE.D1.80.D0.B8.D1.8F_.D1.80.D0.B0.D0.B7.D0.B2.D0.B8.D1.82.D0.B8.D1.8F">История развития</span></h2>
+<p><b>0.99 alfa 8</b>
+<br />Добавлен цикл while ... end_while:
+</p>
+<pre>while &lt;коорд&gt; &lt;цвет&gt; [цвет2]
+    ...
+end_while
+</pre>
+<p>Цвет в точке &lt;коорд&gt; равен &lt;цвет&gt;, если задан цвет2, то цвет точки проверяется на принадлежность диапазону от цвет до цвет2.
+</p>
+<pre>while &lt;параметр&gt; &lt;знак оп.&gt; &lt;знач.&gt;
+    ...
+end_while
+</pre>
+<p>Параметры: hits,mana,stam,wght,ar, coordx,coordy либо переменные.
+<br />Поддерживаются следующие операции: &gt;,&lt;,=,&lt;&gt;. Между знаком операции и значениями должен быть разделитель.
+</p>
+<pre>while lastmsg &lt;последнее сообщение&gt;
+    ...
+end_while
+</pre>
+<p>Сообщение от сервера можно писать не целиком.
+</p><p><b>1.05 beta 3</b>
+<br />Добавил возможность использования скобок в условных операторах:
+</p>
+<pre>while (#a &gt; 1 and #a &lt; 3) or ((#a = 1 and 130, 9 7295) or #a = 5)
+</pre>
+
+
+
+
+
+		
+		
+		
+		<div id="catlinks" class="catlinks" data-mw="interface"><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a  title="Служебная:Категории">Категории</a>: <ul><li><a  class="new" title="Категория:Условия (страница не существует)">Условия</a></li><li><a  class="new" title="Категория:Циклы (страница не существует)">Циклы</a></li></ul>
+		
+		<div class="visualClear"></div>
+		
+	</div>
+</div>
+
+		
+<br>
+<div class="printfooter">Источник — <a dir="ltr" href="https://uopilot.uokit.com/wiki/index.php?title=While&amp;oldid=812">https://uopilot.uokit.com/wiki/index.php?title=While&amp;oldid=812</a></div></body>
+</html>
+ 
