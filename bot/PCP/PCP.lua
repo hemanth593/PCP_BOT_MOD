@@ -1,7 +1,4 @@
 --[[ Reading game memory --]]
-
-
-
 local PCP = {}
 --local bot = require("Bot/bot")
 local cred = require("Bot/cred")
@@ -11,30 +8,66 @@ local cords = require("Bot/cords")
 local bot = require("Bot/bot")
 local travel = require("Bot/travel")
 local Boss = require("Boss/Boss")
-
 --local cave = require("PCP/InsidePCP")
-
 local getX = memory.getX
 local getY = memory.getY
 --local cave = require("PCP/InsidePCP")
-
 --times
 MS = 200
 M = 500
 S = 1000
 SS = 2000
 SSS = 3000
-
 local path = {
     {xY = {}, via = {}},
 	{xY = {}, via = {}}	
 }
-
 local gettotarget = {
         --{xY = {1411,353}, via = {0, 0}},
       --  {xY = {1410,342}, via = {918, 133}},
         {xY = {1411,330}, via = {920, 135}},
 }
+function PCP.cleanfile_allcsv()
+	local path = [[PCP\]]  -- folder where CSVs are stored
+	local resultarray, count = dir(path)
+
+	if count and count > 0 then
+	    for i = 1, #resultarray do
+        	local filename = resultarray[i][1]
+
+        	-- check if the file ends with .csv
+        	if string.match(filename, "%.csv$") then
+            	filedelete(filename)
+            	log("Deleted: " .. filename)
+        	end
+    	end
+	else
+	    log("No files found.")
+	end
+end
+function PCP.cleanfiles()
+			wait(200)
+    		filedelete([[PCP\]] .. Team1 .. [[.csv]])
+			wait(200)
+			filedelete([[PCP\]] .. Team2 .. [[.csv]])
+			wait(200)
+			filedelete([[PCP\]] .. Team3 .. [[.csv]])
+			wait(200)
+			filedelete([[PCP\]] .. Team4 .. [[.csv]])
+			wait(200)
+			filedelete([[PCP\]] .. LeaderName .. [[.csv]])
+			wait(200)
+   			filedelete([[PCP\]] .. Team1 .. [[cave.csv]])
+			wait(200)
+			filedelete([[PCP\]] .. Team2 .. [[cave.csv]])
+			wait(200)
+			filedelete([[PCP\]] .. Team3 .. [[cave.csv]])
+			wait(200)
+			filedelete([[PCP\]] .. Team4 .. [[cave.csv]])
+			wait(200)
+			filedelete([[PCP\]] .. LeaderName .. [[cave.csv]])
+			wait(200)
+end
 function PCP.test()
 	local targetX = 345  
 	local targetY = 101   
@@ -106,7 +139,6 @@ function PCP.removeapprenticedialogue()
 	end
 end
 function PCP.leaderteam()
-
 	log("Trying to Team the members listed")
 	while (not (image.count_image("PCP/team.bmp") + 1 == teamcount ) ) do
 		local timeout = 60  -- seconds
@@ -185,8 +217,6 @@ function PCP.leaderteam()
 		end
 	end
 end
-
-
 function PCP.team()
 		wait("2s")
 		if Leader == "NO" then
@@ -219,7 +249,6 @@ function PCP.team()
 			PCP.leaderteam()
 		end
 end
-
 function PCP.verifyleader()
 	--log(memory.getTeam1Name(),LeaderName )
 	if memory.getTeam1Name() ~= LeaderName then
@@ -235,7 +264,6 @@ function PCP.verifyleader()
 		wait(1000)
 	end
 end
-
 function PCP.calendaropen()
 	while image.find_image("calendar.bmp") == 0 do
 		log("Click on minimap calendar")
@@ -252,7 +280,6 @@ function PCP.calendarclose()
         wait(500)
     end
 end
-
 function PCP.dead()
 	local name = memory.charName()
 	local CHARDEAD = "b"
@@ -277,13 +304,10 @@ function PCP.dead()
 		--PCP.start()
 	end
 end
-
-
 function convert_epoch_to_normal()
 	epoch_time = os.time()
 	return os.date("%Y-%m-%d %H:%M:%S", epoch)
 end
-
 function calculate_time_difference(epoch1, epoch2)
 	return epoch2 - epoch1
 end
@@ -305,7 +329,6 @@ function PCP.rev()
 		wait("1s")
 	end	
 end
-
 function PCP.Dismissteam()
 	log("readytodismiss")
 	PCP.rev()
@@ -385,7 +408,6 @@ function PCP.Dismissteam()
 		end
 	end
 end
-
 function PCP.attackmobs(X, Y)
 	while (( memory.getLocation_cords(0) == X and memory.getLocation_cords(1) == Y and memory.dead() == 0 )) do
     	if image.find_image_center("PCP/specter_fish.bmp") == 1 or image.find_image_center("PCP/specter_shark.bmp") or image.find_image_center("PCP/specter_servant.bmp") then
@@ -411,8 +433,6 @@ function PCP.lurefirst(X, Y)
         Boss.gettotargetspot(tonumber(X), tonumber(Y))
     end
 end
-
---
 function  PCP.Targethpzero()
 	if memory.targetHPpercent() == 0 then
 		return 1
@@ -420,7 +440,6 @@ function  PCP.Targethpzero()
 		return 0 
 	end
 end
-
 function  PCP.spector_fish()
 	if image.find_image_target("PCP/specter_fish.bmp") == 1  then	
 		return 1
@@ -428,7 +447,6 @@ function  PCP.spector_fish()
 		return 0 
 	end
 end
-
 function PCP.spector_fish_down()
 	if PCP.Targethpzero() == 1 and PCP.spector_fish() == 1 then 
 		return 1
@@ -444,7 +462,6 @@ function  PCP.spector_shark()
 		return 0 -- doesnt mean dead either
 	end
 end
-
 function PCP.spector_shark_down()
 	if PCP.Targethpzero() == 1 and PCP.spector_shark() == 1 then 
 		return 1
@@ -452,7 +469,6 @@ function PCP.spector_shark_down()
 		return 0 
 	end	
 end
-
 function  PCP.spector_servant()
 	--if image.find_image_target("PCP/specter_servant.bmp") == 1 and image.find_image_target("PCP/TargetHP.bmp") == 0 then 
 	if image.find_image_target("PCP/specter_servant.bmp") == 1 then	
@@ -461,7 +477,6 @@ function  PCP.spector_servant()
 		return 0 
 	end
 end
-
 function PCP.spector_servant_down()
 	if PCP.Targethpzero() == 1 and PCP.spector_servant() == 1 then 
 		return 1
@@ -469,7 +484,6 @@ function PCP.spector_servant_down()
 		return 0 
 	end	
 end
-
 function  PCP.Coral()
 	--if image.find_image_target("PCP/ICON_Coral.bmp") == 1 and image.find_image_target("PCP/TargetHP.bmp") == 0 then 
 	if image.find_image_target("PCP/ICON_Coral.bmp") == 1 then
@@ -478,7 +492,6 @@ function  PCP.Coral()
 		return 0 
 	end
 end
-
 function PCP.Coral_down()
 	if PCP.Targethpzero() == 1 and PCP.Coral() == 1 then 
 		return 1
@@ -486,7 +499,6 @@ function PCP.Coral_down()
 		return 0 
 	end	
 end
-
 function  PCP.YeChun()
 	--if image.find_image_target("PCP/ICON_Coral.bmp") == 1 and image.find_image_target("PCP/TargetHP.bmp") == 0 then 
 	if image.find_image_target("PCP/ICON_YeChun.bmp") == 1 then
@@ -495,7 +507,6 @@ function  PCP.YeChun()
 		return 0 
 	end
 end
-
 function PCP.YeChun_down()
 	if PCP.Targethpzero() == 1 and PCP.YeChun() == 1 then 
 		return 1
@@ -517,16 +528,13 @@ function  PCP.team_count_met()
 		return 0 
 	end
 end
---
 function PCP.convert_epoch_to_normal()
 	epoch_time = os.time()
 	return os.date("%Y-%m-%d %H:%M:%S", epoch)
 end
-
 function PCP.calculate_time_difference(epoch1, epoch2)
 	return epoch2 - epoch1
 end
-
 function PCP.convertSecondsToTime2(seconds)
 	local hours = math.floor(seconds/3600)
 	local minutes = math.floor((seconds % 3600) / 60)
@@ -541,7 +549,6 @@ function PCP.convertSecondsToTime1(seconds)
     	log ("Total Time in Cave ^:",hours,"h",minutes,"m",remainingseconds,"s")
 	wait(300)
 end
- 
 function PCP.allattackaoe()
 	--while memory.getLocation() == "Shark Sea" and PCP.team_dismissied() == 0  and PCP.YeChun_down() == 0 do
 	while memory.getLocation() == "Shark Sea" and PCP.team_dismissied() == 0 and PCP.team_count_met() == 1 and memory.CharHPpercent() > 1 and image.find_image("PCP/norevok.bmp") == 0 and image.find_image_target("PCP/notarget.bmp") == 1 and (PCP.Targethpzero() == 0) and (PCP.YeChun_down() == 0) do
@@ -551,23 +558,23 @@ function PCP.allattackaoe()
 	if PCP.YeChun_down() == 1  then 
 		if team == "1" then
 			wait(200)
-	 		filedelete ([[PCP\\cave.csv]])
+	 		filedelete ([[PCP\]] .. LeaderName .. [[cave.csv]])
 		end
 		if team == "2" then
 			wait(400)
-	 		filedelete ([[PCP\\cave.csv]])
+	 		filedelete ([[PCP\]] .. LeaderName .. [[cave.csv]])
 		end
 		if team == "3" then
 			wait(600)
-	 		filedelete ([[PCP\\cave.csv]])
+	 		filedelete ([[PCP\]] .. LeaderName .. [[cave.csv]])
 		end
 		if team == "4" then
 			wait(800)
-	 		filedelete ([[PCP\\cave.csv]])
+	 		filedelete ([[PCP\]] .. LeaderName .. [[cave.csv]])
 		end
 		if team == "5" then
 			wait(100)
-	 		filedelete ([[PCP\\cave.csv]])
+	 		filedelete ([[PCP\]] .. LeaderName .. [[cave.csv]])
 		end
 		
 		--PCP.setFlag(0) 
@@ -581,7 +588,6 @@ function PCP.allattackaoe()
 	if PCP.Targethpzero() == 1 then
 		send("TAB")
 	end
-
 --	end
 end
 function PCP.allattack()
@@ -593,37 +599,35 @@ function PCP.allattack()
 	if PCP.YeChun_down() == 1  then 
 		if team == "1" then
 			wait(200)
-	 		filedelete ([[PCP\\cave.csv]])
+	 		filedelete ([[PCP\]] .. LeaderName .. [[cave.csv]])
 			wait("1s")
 			filedelete([[PCP\]] .. CHAR_NAME .. [[cave.csv]])
 			wait("1s")
 		end
 		if team == "2" then
 			wait(200)
-	 		filedelete ([[PCP\\cave.csv]])
+	 		filedelete ([[PCP\]] .. LeaderName .. [[cave.csv]])
 			wait("1s")
 			filedelete([[PCP\]] .. CHAR_NAME .. [[cave.csv]])
 			wait("1s")
 		end
 		if team == "3" then
 			wait(200)
-	 		filedelete ([[PCP\\cave.csv]])
+	 		filedelete ([[PCP\]] .. LeaderName .. [[cave.csv]])
 			wait("1s")
 			filedelete([[PCP\]] .. CHAR_NAME .. [[cave.csv]])
 			wait("1s")
 		end
 		if team == "4" then
 			wait(200)
-	 		filedelete ([[PCP\\cave.csv]])
+	 		filedelete ([[PCP\]] .. LeaderName .. [[cave.csv]])
 			wait("1s")
 			filedelete([[PCP\]] .. CHAR_NAME .. [[cave.csv]])
 			wait("1s")
 		end
 		if team == "5" then
 			wait(200)
-	 		filedelete ([[PCP\\cave.csv]])
-			wait("1s")
-			filedelete([[PCP\]] .. CHAR_NAME .. [[cave.csv]])
+	 		filedelete ([[PCP\]] .. LeaderName .. [[cave.csv]])
 			wait("1s")
 		end
 		
@@ -638,7 +642,6 @@ function PCP.allattack()
 	if PCP.Targethpzero() == 1 then
 		send("TAB")
 	end
-
 --	end
 end
 function PCP.inside1()
@@ -719,7 +722,6 @@ function PCP.inside3()
 		PCP.Dismissteam()
 	end
 end
-
 function PCP.inside2()
  		local targetX = 270 
    		local targetY = -24 
@@ -729,7 +731,7 @@ function PCP.inside2()
 	log("inside script")
 	--while (PCP.YeChun_down() == 0 or PCP.team_dismissied() == 0 or image.count_image("PCP/team.bmp") + 1 ~= teamcount ) do  ---PCP.team_dismissied() == 0  do  --PCP.YeChun_down() == 1	
  
-		while fileexists([[PCP\\cave.csv]]) == "1" do
+		while fileexists([[PCP\]] .. LeaderName .. [[cave.csv]]) == "1" do
  
 		local targetX = 270 
    		local targetY = -24 
@@ -768,7 +770,6 @@ function PCP.inside2()
 		send(attackskills)
 	end
 end
-  
 function PCP.Waitteam()
 	local targetX = -717  
 	local targetY = 691   
@@ -778,7 +779,7 @@ function PCP.Waitteam()
 	PCP.team()
 	wait("2s")
 	if Leader == "YES" then
-		write([[PCP\\cave.csv]])
+		write([[PCP\]] .. LeaderName .. [[cave.csv]])--write([[PCP\]] .. LeaderName .. [[cave.csv]])
 	end
 	--PCP.setFlag(1) 
 	PCP.calendaropen()
@@ -793,7 +794,6 @@ function PCP.Waitteam()
 	wait("2s")
 	--break
 end
-
 function PCP.start()
     PCP.Guild()
 	log("In Guild")
@@ -828,5 +828,4 @@ function PCP.start()
 	log(convertSecondsToTime(PCP.calculate_time_difference(epoch1, epoch4))) 
 	wait(300)
 end
-
 return PCP
