@@ -23,6 +23,7 @@ Team4 = "<YOUR MEMBER NAME 4>"
 team= "5"
 --Script
 bot.verifyclient()
+PCP.cleanfiles()
 PCP.test()
 while true do
       PCP.start()
